@@ -1,10 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+
 import { getUserGuilds,getGuildChannels } from "@/lib/discord";
 import { NextResponse } from "next/server";
 import { error } from "console";
 import { create } from "domain";
 
-const prisma=new PrismaClient()
+import { prisma } from "@/lib/prisma";
+
 
 export async function GET(request:Request)
 {
@@ -24,7 +25,7 @@ export async function GET(request:Request)
     }
 
     try{
-        const guilds=await getUserGuilds(user.accessToken)
+        const guilds=await getUserGuilds(user.accessToken!)
 
         for(const guild of guilds)
         {

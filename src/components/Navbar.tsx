@@ -1,8 +1,34 @@
 "use client"
+import axios from "axios";
 import { Zap, FilePlus,Clock4,ChartColumn,Settings,LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+    const [username,setUsername]=useState("")
+      const searchParams=useSearchParams()
+  const userId=searchParams.get('userId')
+  useEffect(()=>{
+    const fetchUser=async()=>{
+      try{
+          const res=await axios.get(`/api/user/?id=${userId}`)
+          const useri=await res.data
+          console.log(useri.discordUsername)
+          const fullName=useri.discordUsername
+            const parts = fullName.trim().split(" ")
+            const first = parts[0]?.[0] || ""
+            const last = parts[parts.length-1]?.[0] || ""
+          setUsername((first + last).toUpperCase())
+
+      }catch(error)
+      {
+        console.log(error);
+
+      }
+    }
+
+      fetchUser()
+  },[])
   const [id,setId]=useState(0);
   return (
 
@@ -48,7 +74,7 @@ export default function Navbar() {
       <div className="mt-6">
         <button onClick={()=>{setId(4)}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==4?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "}  ${id==4?"text-white ":" text-gray-600 "} scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
           <Settings className="mt-0.5"/>
-          <span className="mt-0.5">Settings</span>
+          <span className="mt-0.5">Settings </span>
         </button>
       </div>
 
@@ -56,7 +82,7 @@ export default function Navbar() {
       <div className="bg-[#0f1c2e] mr-2  rounded-md p-2 scale-100 hover:scale-110 transition duration-500 ease-in-out  cursor-pointer hover:bg-cyan-700 ">
         <div className="flex gap-4 text-center items-center ">
           <div className="rounded-full text-xl w-14 h-14  flex items-center justify-center bg-cyan-500">
-             AD
+             {username}
           </div>
           <div className="mt-1.5" >
             <div className="text-lg font-semibold">

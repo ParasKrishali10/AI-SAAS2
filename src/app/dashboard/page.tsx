@@ -1,10 +1,66 @@
 "use client";
-
+import { useSearchParams, useRouter } from 'next/navigation';
 import Navbar from "@/components/Navbar";
 import Topbar from "@/components/Topbar";
+import axios from "axios";
 import { Clock4, Plus,TrendingUp,Activity } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
+const posts = [
+  { id:1, title:"Post A", date:"2025-04-01" },
+  { id:2, title:"Post B", date:"2025-04-02" },
+  { id:3, title:"Post C", date:"2025-04-03" },
+  { id:4, title:"Post D", date:"2025-04-04" },
+];
+
+interface Posts{
+  id: String
+  title :    String
+  content :  String
+  createdAt :String
+}
+
 
 export default function DashboardLayout() {
+  const router=useRouter()
+  const searchParams=useSearchParams()
+  const [loading,setLoading]=useState(false)
+  const [posts,setPosts]=useState<Posts[]>([])
+  const [username,setUsername]=useState("")
+  const userId=searchParams.get('userId')
+  useEffect(()=>{
+    const fetchUser=async()=>{
+      try{
+          const res=await axios.get(`/api/user/?id=${userId}`)
+          const useri=await res.data
+          console.log(useri.discordUsername)
+          const fullName=useri.discordUsername
+            const parts = fullName.trim().split(" ")
+            const first = parts[0]?.[0] || ""
+            const last = parts[parts.length-1]?.[0] || ""
+          setUsername((first + last).toUpperCase())
+
+      }catch(error)
+      {
+        console.log(error);
+
+      }
+    }
+      const fetchPosts=async()=>{
+        try{
+          setLoading(true)
+          const post=await axios.get("/api/posts")
+
+        }catch(error:any)
+        {
+
+        }finally{
+          setLoading(false)
+        }
+      }
+      fetchPosts()
+      fetchUser()
+  },[])
   return (
     <div className="flex bg-black text-white min-h-screen">
 
@@ -22,7 +78,7 @@ export default function DashboardLayout() {
           <div className="">
             <div className="flex flex-col">
             <div className="text-3xl font-bold">
-              Dashboard
+              Dashboard {username}
             </div>
               <div className="mt-2 text-xl text-gray-600 font-medium">
                 Welcome back! Here's your scheduling overview
@@ -31,11 +87,11 @@ export default function DashboardLayout() {
                   <Plus className="mt-0.5"/>
                   <span className="text-lg">New Post</span>
               </button>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              <div className="grid grid-cols-1  lg:grid-cols-3 gap-6 mt-9">
              <div className="mt-12 w-full flex justify-between items-center overflow-hidden p-8 bg-gray-900 border border-cyan-700 rounded-md transform transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl shadow-cyan-600">
 
                   <div className="flex flex-col">
-                      <div className="text-gray-600 text-2xl font-semibold">
+                      <div className="text-gray-600 text-xl lg:text-2xl font-semibold">
                         Scheduled Posts
                       </div>
                       <div className="text-3xl mt-3">
@@ -53,7 +109,7 @@ export default function DashboardLayout() {
      <div className="mt-12 w-full flex justify-between items-center overflow-hidden p-8 bg-gray-900 border border-cyan-700 rounded-md transform transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl shadow-cyan-600">
 
                   <div className="flex flex-col">
-                      <div className="text-gray-600 text-2xl font-semibold">
+                      <div className="text-gray-600 text-xl lg:text-2xl font-semibold">
                         Total Reach
                       </div>
                       <div className="text-3xl mt-3 font-semibold">
@@ -71,11 +127,11 @@ export default function DashboardLayout() {
 <div className="mt-12 w-full flex justify-between items-center overflow-hidden p-8 bg-gray-900 border border-cyan-700 rounded-md transform transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl shadow-cyan-600">
 
                   <div className="flex flex-col">
-                      <div className="text-gray-600 text-2xl font-semibold">
-                        Scheduled Posts
+                      <div className="text-gray-600 text-lg lg:text-2xl font-semibold">
+                        Engagement Rate
                       </div>
                       <div className="text-3xl mt-3">
-                        12
+                        8.2%
                       </div>
                   </div>
                   <div className="mt-2">
@@ -88,6 +144,252 @@ export default function DashboardLayout() {
               </div>
 
               </div>
+                <div className="grid grid-cols-1  lg:grid-cols-2 gap-6 mt-9">
+              <div
+  className="
+    mt-12 w-full
+    bg-gray-900/60 backdrop-blur-xl
+    p-6 rounded-xl border border-cyan-500/20
+    shadow-[0_0_25px_-6px_rgba(34,211,238,0.25)]
+    transition-all duration-500
+    hover:-translate-y-1 hover:shadow-[0_0_35px_-4px_rgba(34,211,238,0.55)]
+    relative
+  "
+>
+  <div className="flex flex-col">
+    <div className="text-2xl font-semibold text-cyan-300">
+      Recent Posts
+    </div>
+    <div className="text-gray-400 font-medium mt-1">
+      Your latest scheduled content
+    </div>
+  </div>
+
+  <div className="mt-6 space-y-4">
+
+    {loading && [...Array(3)].map((_,i)=>(
+      <div
+        key={i}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-800
+          overflow-hidden
+          relative
+        "
+      >
+        <div className="h-4 bg-gray-700/50 rounded w-2/3"></div>
+        <div className="h-3 bg-gray-700/40 rounded w-1/3 mt-2"></div>
+
+
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+      </div>
+    ))}
+
+    {!loading && posts.slice(0,3).map((p:any)=>(
+      <div
+        key={p.id}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-700
+          hover:border-cyan-400/50
+          hover:-translate-y-[2px] hover:shadow-lg
+          transition-all duration-300 cursor-pointer
+        "
+      >
+        <div className="font-semibold text-gray-100">{p.title}</div>
+        <div className="text-xs text-gray-500">{p.date}</div>
+      </div>
+    ))}
+
+  </div>
+
+
+</div>
+
+                  <div
+  className="
+    mt-12 w-full
+    bg-gray-900/60 backdrop-blur-xl
+    p-6 rounded-xl border border-cyan-500/20
+    shadow-[0_0_25px_-6px_rgba(34,211,238,0.25)]
+    transition-all duration-500
+    hover:-translate-y-1 hover:shadow-[0_0_35px_-4px_rgba(34,211,238,0.55)]
+    relative
+  "
+>
+  <div className="flex flex-col">
+    <div className="text-2xl font-semibold text-cyan-300">
+      Top Performers
+    </div>
+    <div className="text-gray-400 font-medium mt-1">
+     Best performing posts this week
+    </div>
+  </div>
+
+  <div className="mt-6 space-y-4">
+
+    {loading && [...Array(3)].map((_,i)=>(
+      <div
+        key={i}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-800
+          overflow-hidden
+          relative
+        "
+      >
+        <div className="h-4 bg-gray-700/50 rounded w-2/3"></div>
+        <div className="h-3 bg-gray-700/40 rounded w-1/3 mt-2"></div>
+
+
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+      </div>
+    ))}
+
+    {!loading && posts.slice(0,3).map((p:any)=>(
+      <div
+        key={p.id}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-700
+          hover:border-cyan-400/50
+          hover:-translate-y-[2px] hover:shadow-lg
+          transition-all duration-300 cursor-pointer
+        "
+      >
+        <div className="font-semibold text-gray-100">{p.title}</div>
+        <div className="text-xs text-gray-500">{p.date}</div>
+      </div>
+    ))}
+
+  </div>
+
+
+</div>
+                  <div
+  className="
+    mt-12 w-full
+    bg-gray-900/60 backdrop-blur-xl
+    p-6 rounded-xl border border-cyan-500/20
+    shadow-[0_0_25px_-6px_rgba(34,211,238,0.25)]
+    transition-all duration-500
+    hover:-translate-y-1 hover:shadow-[0_0_35px_-4px_rgba(34,211,238,0.55)]
+    relative
+  "
+>
+  <div className="flex flex-col">
+    <div className="text-2xl font-semibold text-cyan-300">
+     Upcoming Schedule
+    </div>
+    <div className="text-gray-400 font-medium mt-1">
+      Next 7 days content plan
+
+
+    </div>
+  </div>
+
+  <div className="mt-6 space-y-4">
+
+    {loading && [...Array(3)].map((_,i)=>(
+      <div
+        key={i}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-800
+          overflow-hidden
+          relative
+        "
+      >
+        <div className="h-4 bg-gray-700/50 rounded w-2/3"></div>
+        <div className="h-3 bg-gray-700/40 rounded w-1/3 mt-2"></div>
+
+
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+      </div>
+    ))}
+
+    {!loading && posts.slice(0,3).map((p:any)=>(
+      <div
+        key={p.id}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-700
+          hover:border-cyan-400/50
+          hover:-translate-y-[2px] hover:shadow-lg
+          transition-all duration-300 cursor-pointer
+        "
+      >
+        <div className="font-semibold text-gray-100">{p.title}</div>
+        <div className="text-xs text-gray-500">{p.date}</div>
+      </div>
+    ))}
+
+  </div>
+
+
+</div>
+                 <div
+  className="
+    mt-12 w-full
+    bg-gray-900/60 backdrop-blur-xl
+    p-6 rounded-xl border border-cyan-500/20
+    shadow-[0_0_25px_-6px_rgba(34,211,238,0.25)]
+    transition-all duration-500
+    hover:-translate-y-1 hover:shadow-[0_0_35px_-4px_rgba(34,211,238,0.55)]
+    relative
+  "
+>
+  <div className="flex flex-col">
+    <div className="text-2xl font-semibold text-cyan-300">
+   Analytics
+    </div>
+    <div className="text-gray-400 font-medium mt-1">
+      Detailed performance metrics
+    </div>
+  </div>
+
+  <div className="mt-6 space-y-4">
+
+    {loading && [...Array(3)].map((_,i)=>(
+      <div
+        key={i}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-800
+          overflow-hidden
+          relative
+        "
+      >
+        <div className="h-4 bg-gray-700/50 rounded w-2/3"></div>
+        <div className="h-3 bg-gray-700/40 rounded w-1/3 mt-2"></div>
+
+
+        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+      </div>
+    ))}
+
+    {!loading && posts.slice(0,3).map((p:any)=>(
+      <div
+        key={p.id}
+        className="
+          bg-gray-800/60
+          p-4 rounded-md border border-gray-700
+          hover:border-cyan-400/50
+          hover:-translate-y-[2px] hover:shadow-lg
+          transition-all duration-300 cursor-pointer
+        "
+      >
+        <div className="font-semibold text-gray-100">{p.title}</div>
+        <div className="text-xs text-gray-500">{p.date}</div>
+      </div>
+    ))}
+
+  </div>
+
+
+</div>
+
+                </div>
             </div>
           </div>
         </div>

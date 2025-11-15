@@ -1,9 +1,35 @@
 "use client"
+import axios from 'axios';
 import { div } from 'framer-motion/client';
 import { Search, Bell} from 'lucide-react';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 export default function Topbar(){
     const [open,setOpen]=useState(false)
+    const [username,setUsername]=useState("")
+      const searchParams=useSearchParams()
+  const userId=searchParams.get('userId')
+  useEffect(()=>{
+    const fetchUser=async()=>{
+      try{
+          const res=await axios.get(`/api/user/?id=${userId}`)
+          const useri=await res.data
+          console.log(useri.discordUsername)
+          const fullName=useri.discordUsername
+            const parts = fullName.trim().split(" ")
+            const first = parts[0]?.[0] || ""
+            const last = parts[parts.length-1]?.[0] || ""
+          setUsername((first + last).toUpperCase())
+
+      }catch(error)
+      {
+        console.log(error);
+
+      }
+    }
+
+      fetchUser()
+  },[])
     return <div>
         <div className="bg-gray-900 h-16 flex items-center justify-between px-6 border-b border-gray-800 sticky top-0 z-50 ">
             <div className=' gap-4 relative w-80'>
@@ -19,7 +45,7 @@ export default function Topbar(){
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
         </div>
         <div className="cursor-pointer rounded-full bg-cyan-700 text-lg w-10 h-10 flex items-center justify-center">
-          U
+          {username}
         </div>
 
         {open && (
