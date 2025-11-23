@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const client=new OpenAI({
   apiKey:process.env.OPENAI_API_KEY!
 })
-export async function PUT(req:Request){
+export async function POST(req:Request){
   try{
      const { description, generatedImages, tone, length,prompts } = await req.json();
        if (!description) {

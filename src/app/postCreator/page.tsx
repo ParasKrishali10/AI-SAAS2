@@ -3,9 +3,9 @@ import { useEffect, useState } from "react"
 import { Image ,Sparkles,Volume2 } from 'lucide-react';
 import toast from "react-hot-toast";
 import axios from "axios";
-import { generatedImages } from "@/lib/ai";
+import { useRouter } from "next/navigation";
 import ParticleBackground from "@/components/ParticleBackground";
-import { div } from "framer-motion/client";
+import { usePostStore } from "@/lib/postStore";
 const PLACEHOLDER_EXAMPLES = [
   "Write about the latest Discord features and updates...",
   "Create a community announcement for your server...",
@@ -13,6 +13,7 @@ const PLACEHOLDER_EXAMPLES = [
   "Share exciting news about your project launch...",
   "Post motivational content to inspire your community...",
 ]
+
 const IMAGE_PLACEHOLDER_EXAMPLES = [
   "A futuristic neon Discord bot mascot glowing in purple and blue",
   "Cute chibi-style gamer character sitting at a RGB-lit desk",
@@ -46,6 +47,7 @@ export default function CreatePost(){
     const [prompts,setPrompts]=useState("");
     const [selectedTone, setSelectedTone] = useState("Professional");
     const [selectedLength,setSelectedLength]=useState("Short")
+    const router=useRouter()
     const handleFocus1 = () => {
     setIsFocused1(true);
   };
@@ -69,6 +71,7 @@ export default function CreatePost(){
     }
     setGeneration(true)
     try{
+        toast.success("Wait while we are generating your content.....")
         const response=await axios.post("/api/posts/generate",{
             description:desc.trim(),
             generatedImages:generatedImages,
@@ -82,6 +85,10 @@ export default function CreatePost(){
         imageUrls: data.imageUrls || [],
        }
        setGeneratedPost(post)
+const setPost = usePostStore.getState().setPost;
+setPost(post.content, post.imageUrls);
+router.push("/postGenerated");
+
     }catch(error:any)
     {
         console.log(error)
@@ -100,6 +107,7 @@ export default function CreatePost(){
     }
     setGeneration(true)
     try{
+       toast.success("Wait while we are generating your content...")
         const response=await axios.post("/api/posts/generate",{
             description:desc.trim(),
             generatedImages:generatedImages,
@@ -112,7 +120,12 @@ export default function CreatePost(){
         content:data.content,
         imageUrls: data.imageUrls || [],
        }
+
        setGeneratedPost(post)
+       const setPost = usePostStore.getState().setPost;
+setPost(post.content, post.imageUrls);
+router.push("/postGenerated");
+
     }catch(error:any)
     {
         console.log(error)
@@ -150,14 +163,14 @@ export default function CreatePost(){
       </div>
             <div className="relative flex flex-col mt-10 ml-6 mr-8">
                 <div  className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-tr from-cyan-400 via-purple-500 to-cyan-300">
-                    AI Post Creator
+                    AI Post Creator {generatedPost?.content}
                 </div>
                 <div className="mt-2 text-gray-600 text-lg font-semibold">
                     Step 1 of 3 - Create and schedule your Discord posts
                 </div>
                 <div className="mt-6 text-xl font-bold flex gap-2 items-center">
                     <Sparkles className="mt-0.5 text-cyan-500"/>
-                   <span>Post description {prompts} </span>
+                   <span>Post description  {generatedPost?.imageUrls}</span>
                 </div>
                 <div
    className={`mt-4 rounded-xl transition-all duration-300 backdrop-blur-md
@@ -265,7 +278,7 @@ export default function CreatePost(){
 
          <div className="mt-6 text-xl font-bold flex gap-2 items-center">
                     <Image className="text-cyan-500"/>
-                   <span>Image description {generatedPost?.imageUrls} </span>
+                   <span>Image description </span>
                 </div>
                  <div
   className={`mt-6 relative rounded-lg transition-all duration-300 ${
