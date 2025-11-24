@@ -1,11 +1,11 @@
-"use client";
+"use client"
 import { useSearchParams, useRouter } from 'next/navigation';
 import Navbar from "@/components/Navbar";
 import Topbar from "@/components/Topbar";
 import axios from "axios";
 import { Clock4, Plus,TrendingUp,Activity } from "lucide-react";
 import { useEffect, useState } from "react";
-import toast from 'react-hot-toast';
+
 const posts = [
   { id:1, title:"Post A", date:"2025-04-01" },
   { id:2, title:"Post B", date:"2025-04-02" },
@@ -21,7 +21,7 @@ interface Posts{
 }
 
 
-export default function DashboardLayout() {
+export default function DashboardPage() {
   const router=useRouter()
   const searchParams=useSearchParams()
   const [loading,setLoading]=useState(false)
