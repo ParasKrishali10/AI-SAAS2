@@ -64,9 +64,9 @@ export default function DashboardPage() {
   return (
     <div className="flex bg-black text-white min-h-screen">
 
-      <div className=" fixed top-0 left-0 h-full w-80 bg-gray-900  md:block hidden">
-        <Navbar />
-      </div>
+      <div className="fixed inset-y-0 left-0 w-80 bg-gray-900 md:block hidden overflow-y-auto border-r border-white/10 shadow-lg shadow-black/20">
+  <Navbar />
+</div>
 
       <div className="md:ml-80 w-full flex flex-col relative">
 

@@ -11,7 +11,7 @@ export default function Home() {
     discordAuthUrl.searchParams.append('response_type', 'code');
     discordAuthUrl.searchParams.append('scope', 'identify guilds email');
 
-    // Redirect user to Discord authorization page
+
     window.location.href = discordAuthUrl.toString();
   };
 
