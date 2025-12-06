@@ -36,9 +36,9 @@ export async function getDiscordUser(accessToken:string):Promise<DiscordUser>{
 }
 
 export async function getUserGuilds(accessToken:string):Promise<DiscordGuild[]>{
-    const response=await fetch(`${DISCORD_API}/user/@me/guilds`,{
+    const response=await fetch(`${DISCORD_API}/users/@me/guilds`,{
         headers:{
-           Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+           Authorization: `Bearer ${accessToken}`,
         }
     })
     if(!response.ok){
@@ -99,7 +99,7 @@ export async function refreshAccessToken(refreshToken:string){
         grant_type:'refresh_token',
         refresh_token:refreshToken,
     })
-    const response=await fetch(`${DISCORD_API}/oauth2/tokrn`,{
+    const response=await fetch(`${DISCORD_API}/oauth2/token`,{
         method:'POST',
         body:params,
         headers:{

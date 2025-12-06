@@ -5,6 +5,7 @@ import Topbar from "@/components/Topbar";
 import axios from "axios";
 import { Clock4, Plus,TrendingUp,Activity } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useUserInfo } from '@/lib/userInfo';
 
 const posts = [
   { id:1, title:"Post A", date:"2025-04-01" },
@@ -27,11 +28,14 @@ export default function DashboardPage() {
   const [loading,setLoading]=useState(false)
   const [posts,setPosts]=useState<Posts[]>([])
   const [username,setUsername]=useState("")
-  const userId=searchParams.get('userId')
+  const userIds=searchParams.get('userId')
+   const userId=useUserInfo(state=>state.userId)
+        const setUserId=useUserInfo(state=>state.setUserId)
   useEffect(()=>{
     const fetchUser=async()=>{
       try{
-          const res=await axios.get(`/api/user/?id=${userId}`)
+        setUserId(userIds!)
+          const res=await axios.get(`/api/user/?id=${userIds}`)
           const useri=await res.data
           console.log(useri.discordUsername)
           const fullName=useri.discordUsername
@@ -39,6 +43,7 @@ export default function DashboardPage() {
             const first = parts[0]?.[0] || ""
             const last = parts[parts.length-1]?.[0] || ""
           setUsername((first + last).toUpperCase())
+
 
       }catch(error)
       {
@@ -64,7 +69,7 @@ export default function DashboardPage() {
   return (
     <div className="flex bg-black text-white min-h-screen">
 
-      <div className="fixed inset-y-0 left-0 w-80 bg-gray-900 md:block hidden overflow-y-auto border-r border-white/10 shadow-lg shadow-black/20">
+      <div className="fixed inset-y-0 left-0 w-80 bg-gray-900 md:block hidden  border-r border-white/10 shadow-lg shadow-black/20">
   <Navbar />
 </div>
 

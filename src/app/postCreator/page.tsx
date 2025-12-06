@@ -86,7 +86,7 @@ export default function CreatePost(){
        }
        setGeneratedPost(post)
 const setPost = usePostStore.getState().setPost;
-setPost(post.content, post.imageUrls);
+setPost(desc,post.content, post.imageUrls);
 router.push("/postGenerated");
 
     }catch(error:any)
@@ -123,7 +123,7 @@ router.push("/postGenerated");
 
        setGeneratedPost(post)
        const setPost = usePostStore.getState().setPost;
-setPost(post.content, post.imageUrls);
+  setPost(desc,post.content, post.imageUrls);
 router.push("/postGenerated");
 
     }catch(error:any)
@@ -163,7 +163,7 @@ router.push("/postGenerated");
       </div>
             <div className="relative flex flex-col mt-10 ml-6 mr-8">
                 <div  className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-tr from-cyan-400 via-purple-500 to-cyan-300">
-                    AI Post Creator {generatedPost?.content}
+                    AI Post Creator
                 </div>
                 <div className="mt-2 text-gray-600 text-lg font-semibold">
                     Step 1 of 3 - Create and schedule your Discord posts
@@ -312,9 +312,7 @@ router.push("/postGenerated");
                           <span>Generate Post With Image</span>
                     </button>
                 </div>
-{images.map((img, i) => (
-  <img key={i} src={img} alt={`Generated image ${i}`} />
-))}
+
 
             </div>
     </div>

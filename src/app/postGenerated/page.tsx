@@ -1,14 +1,126 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sparkles, Volume2, Image as ImageIcon } from "lucide-react";
 import { usePostStore } from "@/lib/postStore";
 import ParticleBackground from "@/components/ParticleBackground";
 import { SendHorizontal} from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useUserInfo } from "@/lib/userInfo";
+import { channel } from "diagnostics_channel";
+import { div, image } from "framer-motion/client";
+
+interface SchedulingModalProps{
+  userId:string
+  post:{
+    content:string
+    imageUrls:string[]
+  }
+  description:string
+  onClose:()=>void
+  onSuccess:()=>void
+}
+
+interface DiscordServer{
+  id:string
+  guildId:string
+  guildName:string
+  guildIcon:string | null
+}
+
+interface DiscordChannel{
+  id:string
+  name:string
+  type:number
+}
+
 export default function PostGenerated() {
   const { content, images } = usePostStore();
   const [generatedImages, setGeneratedImages] = useState(false);
   const [contents, setContents] = useState(content);
+  const [servers,setServers]=useState<DiscordServer[]>([])
+  const [channels,setChannels]=useState<DiscordChannel[]>([])
+  const [selectedServer, setSelectedServer] = useState<string>('');
+  const [selectedChannel, setSelectedChannel] = useState<string>('');
+  const [scheduledTime, setScheduledTime] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [scheduling, setScheduling] = useState(false);
+  const userId=useUserInfo((state)=>state.userId)
+  const description=usePostStore((s)=>s.description)
+
+  useEffect(()=>{
+    fetchServers()
+  },[])
+
+    useEffect(() => {
+    if (selectedServer) {
+      fetchChannels(selectedServer);
+    }
+  }, [selectedServer]);
+
+  useEffect(()=>{
+    const now=new Date()
+    now.setMinutes(now.getMinutes()+5)
+    const minTime=now.toISOString().slice(0,16)
+    setScheduledTime(minTime)
+  })
+
+  const fetchServers=async()=>{
+    try{
+      const response=await axios.get(`/api/discord/server?userId=${userId}`)
+      setServers(response.data.servers || [])
+    }
+    catch (error) {
+      console.error('Error fetching servers:', error);
+      toast.error('Failed to load servers');
+    } finally {
+      setLoading(false);
+    }
+
+  }
+  const fetchChannels=async(serverId:string)=>{
+    try{
+      const response=await axios.post('/api/discord/servers',{serverId})
+      setChannels(response.data.channels || [])
+    }catch(error){
+      console.error('Error fetching channels:', error);
+      toast.error('Failed to load channels');
+    }
+  }
+
+  const handleSchedule=async()=>{
+    if(!selectedChannel || !selectedServer || !scheduledTime )
+    {
+      toast.error("Please fill all fields")
+      return
+    }
+    setScheduling(true)
+    try{
+      const response=await axios.post('/api/posts/schedule',{
+        userId,
+        serverId:selectedServer,
+        channelId:selectedChannel,
+        description,
+        generatedContent:contents,
+        imageUrls:images,
+         scheduledFor: new Date(scheduledTime).toISOString(),
+      })
+      if(response.data.success)
+      {
+        toast.success("Post Scheduled")
+        return
+      }
+    }catch(error)
+    {
+      toast.error("Failed to schedule your post")
+      console.log("error")
+      return
+
+    }finally{
+      setScheduling(false)
+    }
+  }
 
   return (
     <div className="relative min-h-screen text-white">
@@ -84,12 +196,13 @@ export default function PostGenerated() {
   "
 />
 <datalist id="serverTypes">
-  <option value="Awesome Server" />
-  <option value="Web Server" />
-  <option value="Science Server" />
-  <option value="Gaming Server" />
-  <option value="Community Server" />
+  {servers.map((server) => (
+    <option key={server.id} value={server.guildName}>
+      {server.guildName}
+    </option>
+  ))}
 </datalist>
+
           </div>
 
             </div>
@@ -102,7 +215,7 @@ export default function PostGenerated() {
   placeholder="My Awesome Server"
   list="serverTypes"
   className="
-    mt-2 w-full p-3 ml-3
+    mt-2 w-full p-3 ml-2
     rounded-lg
     transition-all duration-300
     bg-white/5 border border-white/10
@@ -126,12 +239,12 @@ export default function PostGenerated() {
             </div>
             <div className="grid grid-cols-2 justify-between items-center mt-6">
             <div >
-          <label htmlFor="" className="font-bold text-xl mt-4">Date</label>
+          <label htmlFor="" className="font-bold text-xl mt-4">Date </label>
           <div className="mt-3">
 
           <input
   type="date"
-  placeholder="My Awesome Server"
+
 
   className="
     mt-2 w-full p-3
@@ -153,7 +266,7 @@ export default function PostGenerated() {
 
           <input
   type="time"
-  placeholder="My Awesome Server"
+
 
   className="
     mt-2 w-full p-3 ml-2
@@ -173,7 +286,7 @@ export default function PostGenerated() {
             </div>
 
             <div className="flex justify-center items-center mt-6">
-           <button className="mt-6 text-white  bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] p-4 text-xl text-black font-medium rounded-md cursor-pointer flex gap-2 items-center justify-center " >
+           <button className="mt-6 text-white  bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] p-4 text-xl text-black font-medium rounded-md cursor-pointer flex gap-2 items-center justify-center " onClick={handleSchedule}>
                              <SendHorizontal/>
                           <span>Schedule Post</span>
                     </button>
