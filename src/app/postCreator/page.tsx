@@ -85,8 +85,13 @@ export default function CreatePost(){
         imageUrls: data.imageUrls || [],
        }
        setGeneratedPost(post)
-const setPost = usePostStore.getState().setPost;
-setPost(desc,post.content, post.imageUrls);
+const setContent = usePostStore.getState().setContent;
+const setDesription = usePostStore.getState().setDescription;
+const setImages = usePostStore.getState().setImages;
+setContent(post.content)
+setDesription(desc)
+setImages(post.imageUrls)
+
 router.push("/postGenerated");
 
     }catch(error:any)
@@ -122,8 +127,12 @@ router.push("/postGenerated");
        }
 
        setGeneratedPost(post)
-       const setPost = usePostStore.getState().setPost;
-  setPost(desc,post.content, post.imageUrls);
+       const setContent = usePostStore.getState().setContent;
+const setDesription = usePostStore.getState().setDescription;
+const setImages = usePostStore.getState().setImages;
+setContent(post.content)
+setDesription(desc)
+setImages(post.imageUrls)
 router.push("/postGenerated");
 
     }catch(error:any)

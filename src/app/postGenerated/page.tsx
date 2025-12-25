@@ -8,8 +8,7 @@ import { SendHorizontal} from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useUserInfo } from "@/lib/userInfo";
-import { channel } from "diagnostics_channel";
-import { div, image } from "framer-motion/client";
+
 
 interface SchedulingModalProps{
   userId:string
@@ -35,11 +34,16 @@ interface DiscordChannel{
   type:number
 }
 
+type ChannelsByServer=Record<string,DiscordChannel[]>
+
 export default function PostGenerated() {
-  const { content, images } = usePostStore();
+  const content=usePostStore((s)=>s.content)
+  const images=usePostStore((s)=>s.images)
+  const searchParams=new URLSearchParams()
   const [generatedImages, setGeneratedImages] = useState(false);
   const [contents, setContents] = useState(content);
   const [servers,setServers]=useState<DiscordServer[]>([])
+  const [channelsByServer,setChannelsByServer]=useState<ChannelsByServer>({})
   const [channels,setChannels]=useState<DiscordChannel[]>([])
   const [selectedServer, setSelectedServer] = useState<string>('');
   const [selectedChannel, setSelectedChannel] = useState<string>('');
@@ -48,27 +52,70 @@ export default function PostGenerated() {
   const [scheduling, setScheduling] = useState(false);
   const userId=useUserInfo((state)=>state.userId)
   const description=usePostStore((s)=>s.description)
+  const [botMissing, setBotMissing] = useState(false);
+const [redirectUrl, setRedirectUrl] = useState("");
+  const state=`postGenerated|${selectedServer}`
+  const hasHydrated=useUserInfo((state)=>state.hasHydrated)
+  const cancelled=searchParams.get("cancelled")
 
   useEffect(()=>{
-    fetchServers()
+    if(cancelled){
+      toast.error("Bot permission denied")
+      return;
+    }
+  },[cancelled])
+  useEffect(()=>{
+    if(!selectedServer)
+    {
+      setChannels([])
+      setBotMissing(false)
+      return
+    }
+    checkBotLoadChannels(selectedServer)
+  },[selectedServer])
+
+  useEffect(() => {
+setRedirectUrl(`${window.location.origin}/api/discord/callback`);
+
+}, []);
+  useEffect(()=>{
+    const params=new URLSearchParams(window.location.search)
+    const state=params.get("state")
+    if(!state)
+    {
+      return
+    }
+    const [,serverId]=state.split("|")
+    if(serverId)
+    {
+      setSelectedServer(serverId)
+    }
+    window.history.replaceState({},"",window.location.pathname)
   },[])
 
-    useEffect(() => {
-    if (selectedServer) {
-      fetchChannels(selectedServer);
+  useEffect(()=>{
+    if(!hasHydrated){
+      return
     }
-  }, [selectedServer]);
+    if(!userId)
+    {
+      return
+    }
+    fetchServers()
+  },[hasHydrated,userId])
 
   useEffect(()=>{
+
     const now=new Date()
     now.setMinutes(now.getMinutes()+5)
     const minTime=now.toISOString().slice(0,16)
     setScheduledTime(minTime)
-  })
+  },[])
 
   const fetchServers=async()=>{
     try{
       const response=await axios.get(`/api/discord/server?userId=${userId}`)
+      const fetchedServers: DiscordServer[] = response.data.servers || [];
       setServers(response.data.servers || [])
     }
     catch (error) {
@@ -79,13 +126,27 @@ export default function PostGenerated() {
     }
 
   }
-  const fetchChannels=async(serverId:string)=>{
+
+
+  const checkBotLoadChannels=async(serverId:string)=>{
     try{
-      const response=await axios.post('/api/discord/servers',{serverId})
-      setChannels(response.data.channels || [])
-    }catch(error){
-      console.error('Error fetching channels:', error);
-      toast.error('Failed to load channels');
+      const botRes=await axios.get (`/api/discord/check-bot?guildId=${serverId}`)
+      if(!botRes.data.botPresent)
+      {
+        setBotMissing(true)
+         setChannels([]);
+        toast.error("Bot is not added to this server");
+        toast("Click on Add Bot button to add bot to your server");
+        return;
+      }
+      const channelRes=await axios.get(  `/api/discord/channels?serverId=${serverId}`)
+      setChannels(channelRes.data.channels||[])
+      setBotMissing(false)
+    }catch(error)
+    {
+      toast.error("Unable to load channels");
+      setChannels([]);
+      setBotMissing(true);
     }
   }
 
@@ -167,7 +228,7 @@ export default function PostGenerated() {
           )}
 
           <textarea
-            value={contents}
+            value={content}
             onChange={(e) => setContents(e.target.value)}
             className="text-lg w-full h-64 p-4 rounded-lg resize-none bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
@@ -180,11 +241,10 @@ export default function PostGenerated() {
             <div >
           <label htmlFor="" className="font-bold text-xl">Server</label>
           <div className="mt-3">
-
-          <input
-  type="text"
-  placeholder="My Awesome Server"
-  list="serverTypes"
+<select
+  id="server"
+  value={selectedServer}
+  onChange={(e) => setSelectedServer(e.target.value)}
   className="
     mt-2 w-full p-3
     rounded-lg
@@ -194,50 +254,102 @@ export default function PostGenerated() {
     shadow-xl shadow-indigo-600/30
     text-white placeholder-gray-400
   "
-/>
-<datalist id="serverTypes">
+>
+  <option value="" className="bg-black">Select a Server</option>
   {servers.map((server) => (
-    <option key={server.id} value={server.guildName}>
+    <option key={server.id} value={server.guildId}  className="bg-black text-gray-400">
       {server.guildName}
     </option>
   ))}
-</datalist>
+</select>
 
           </div>
 
             </div>
-            <div >
-          <label htmlFor="" className="font-bold text-xl ml-3">Channels</label>
-          <div className="mt-3">
+             {/* CHANNEL SELECT  */}
 
-          <input
-  type="text"
-  placeholder="My Awesome Server"
-  list="serverTypes"
-  className="
-    mt-2 w-full p-3 ml-2
+          <div >
+            <label htmlFor="" className="font-bold text-xl ml-3">Channels</label>
+            <select
+              value={selectedChannel}
+              onChange={(e) => setSelectedChannel(e.target.value)}
+              disabled={botMissing}
+          className="
+    mt-5 ml-2 w-full p-3
     rounded-lg
     transition-all duration-300
     bg-white/5 border border-white/10
     focus:outline-none focus:ring-2 focus:ring-cyan-500
     shadow-xl shadow-indigo-600/30
     text-white placeholder-gray-400
+    rounded-md
   "
-/>
-<datalist id="serverTypes">
-  <option value="Awesome Server" />
-  <option value="Web Server" />
-  <option value="Science Server" />
-  <option value="Gaming Server" />
-  <option value="Community Server" />
-</datalist>
+            >
+              <option value="" className="bg-black">Select a Channel</option>
+              {channels.map((c) => (
+                <option key={c.id} value={c.id} className="bg-black">
+                  #{c.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-            </div>
+{botMissing && selectedServer && (
+    <div className="col-span-2 flex justify-center mt-6">
+      <a
+ href={`https://discord.com/oauth2/authorize
+    ?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}
+    &scope=bot
+    &permissions=68608
+    &guild_id=${selectedServer}
+    &disable_guild_select=true
+    &redirect_uri=${encodeURIComponent(redirectUrl)}
+    &response_type=code
+    &state=${encodeURIComponent(state)}
+  `.replace(/\s+/g, "")}
+        className="bg-indigo-600 px-6 py-3 rounded-md text-white text-lg font-semibold"
+      >
+        Add Bot To Server
+      </a>
+    </div>
+  )}
+
+
+
+            {/* <div >
+          <label htmlFor="" className="font-bold text-xl ml-3">Channels</label>
+          <div className="mt-3">
+ <select
+    id="channel"
+    disabled={!selectedServer}
+    value={selectedChannel}
+    onChange={(e) => setSelectedChannel(e.target.value)}
+    className="
+      mt-2 w-full p-3 ml-2
+      rounded-lg
+      transition-all duration-300
+      bg-white/5 border border-white/10
+      focus:outline-none focus:ring-2 focus:ring-cyan-500
+      shadow-xl shadow-indigo-600/30
+      text-white
+    "
+  >
+    <option value="">Select a channel</option>
+    {channels.map((ch) => (
+      <option key={ch.id} value={ch.id}>
+        {ch.name}
+      </option>
+    ))}
+  </select>
+          </div>
+
+            </div> */}
 
 
             </div>
-            <div className="grid grid-cols-2 justify-between items-center mt-6">
+            {!botMissing && selectedServer &&(
+              <div>
+<div className="grid grid-cols-2 justify-between items-center mt-6">
             <div >
           <label htmlFor="" className="font-bold text-xl mt-4">Date </label>
           <div className="mt-3">
@@ -292,6 +404,9 @@ export default function PostGenerated() {
                     </button>
 
             </div>
+              </div>
+            )}
+
 
 
         </div>

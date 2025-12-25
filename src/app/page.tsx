@@ -3,17 +3,34 @@ import ParticleBackground from "@/components/ParticleBackground"
 import { Diamond } from "lucide-react"
 export default function Home() {
 
-  const handleConnectDiscord=()=>{
-     const discordAuthUrl = new URL('https://discord.com/oauth2/authorize');
+  const handleConnectDiscord = () => {
+  const discordAuthUrl = new URL("https://discord.com/oauth2/authorize");
 
-    discordAuthUrl.searchParams.append('client_id',process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!);
-    discordAuthUrl.searchParams.append('redirect_uri', process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!);
-    discordAuthUrl.searchParams.append('response_type', 'code');
-    discordAuthUrl.searchParams.append('scope', 'identify guilds email');
+  discordAuthUrl.searchParams.append(
+    "client_id",
+    process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!
+  );
+
+  discordAuthUrl.searchParams.append(
+    "redirect_uri",
+    process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!
+  );
+
+  discordAuthUrl.searchParams.append("response_type", "code");
+
+  // for getting bot setup phase
+  discordAuthUrl.searchParams.append(
+    "scope",
+    "identify guilds email bot applications.commands"
+  );
+
+// Adding up the permission
+discordAuthUrl.searchParams.append("permissions", "68608");
 
 
-    window.location.href = discordAuthUrl.toString();
-  };
+  window.location.href = discordAuthUrl.toString();
+};
+
 
 
   return <div className="relative w-full overflow-hidden font-serif bg-gradient-to-br from-[#0a0e27] to-[#1a1f3a] flex items-center justify-center min-h-screen">

@@ -1,21 +1,30 @@
+// lib/postStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface PostData {
-  description: string;
+interface PostState {
   content: string;
   images: string[];
-
-  setDescription: (desc: string) => void;
-  setPost: (description: string, content: string, images: string[]) => void;
+  description: string;
+  setContent: (c: string) => void;
+  setImages: (imgs: string[]) => void;
+  setDescription: (d: string) => void;
+  reset: () => void;
 }
 
-export const usePostStore = create<PostData>((set) => ({
-  description: "",
-  content: "",
-  images: [],
-
-  setDescription: (desc) => set({ description: desc }),
-
-  setPost: (description, content, images) =>
-    set({ description, content, images }),
-}));
+export const usePostStore = create<PostState>()(
+  persist(
+    (set) => ({
+      content: "",
+      images: [],
+      description: "",
+      setContent: (content) => set({ content }),
+      setImages: (images) => set({ images }),
+      setDescription: (description) => set({ description }),
+      reset: () => set({ content: "", images: [], description: "" }),
+    }),
+    {
+      name: "post-store",
+    }
+  )
+);

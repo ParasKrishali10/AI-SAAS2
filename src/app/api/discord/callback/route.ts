@@ -7,11 +7,22 @@ export async function GET(req:Request)
 {
     const {searchParams}=new URL(req.url);
     const code=searchParams.get('code')
+    const state=searchParams.get("state")
+    // Bot cancel option
+
+    if(!code && state?.startsWith("postGenerate"))
+    {
+        const [,serverId]=state.split("|")
+        return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/postGenerated?serverId=${serverId}&cancelled=true`)
+    }
+
     if(!code)
     {
-        return NextResponse.json({error:'No code provided'},{status:400})
+        return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/`)
 
     }
+
+
 
     try{
 
@@ -34,6 +45,17 @@ export async function GET(req:Request)
             refreshToken: tokenData.refresh_token,
                 }
             })
+
+            // Bot will contain state so it will work accordingly
+            if(state?.startsWith('postGenerated'))
+            {
+                 const [, serverId] = state.split("|");
+
+      return NextResponse.redirect(
+        `${process.env.NEXTAUTH_URL}/postGenerated?serverId=${serverId}&userId=${user.id}`
+      );
+            }
+
             return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard?userId=${user.id}`);
 
     }catch(error)

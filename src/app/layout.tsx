@@ -25,7 +25,7 @@ className={GeistSans.className}
          <Toaster
           position="top-right"
           toastOptions={{
-            duration: 3000,
+            duration: 5000,
             style: {
               background: "rgba(10, 15, 26, 0.85)",        // dark glass
               backdropFilter: "blur(8px)",

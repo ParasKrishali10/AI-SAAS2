@@ -53,9 +53,17 @@ export async function getGuildChannels(guildId:string):Promise<DiscordChannel[]>
             Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
         }
     })
-    if(!response.ok){
-        throw new Error('Failed to fetch guilds');
-    }
+     if (!response.ok) {
+    const text = await response.text();
+    console.error(
+      `Discord /guilds/${guildId}/channels failed:`,
+      response.status,
+      text
+    );
+    throw new Error(
+      `Failed to fetch channels for guild ${guildId}. Status: ${response.status}`
+    );
+  }
      const channels = await response.json();
      return channels.filter((ch: DiscordChannel) => ch.type === 0);
 }

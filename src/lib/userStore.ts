@@ -4,23 +4,16 @@ interface UserState{
     userId:string|null
     setUserId:(id:string)=>void
     clearUserId: () => void;
-    hasHydrated:boolean
 }
 export const useUserInfo=create<UserState>()(
     persist(
         (set)=>({
             userId:null,
-            hasHydrated:false,
             setUserId:(id)=>set({userId:id}),
             clearUserId: () => set({ userId: null }),
         }),
         {
-            name:"user-id-storage",
-            onRehydrateStorage: () => (state) => {
-         if (state) {
-          state.hasHydrated = true;
-        }
-      },
+            name:"user-id-storage"
         }
     )
 )

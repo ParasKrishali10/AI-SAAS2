@@ -23,14 +23,13 @@ interface Posts{
 
 
 export default function DashboardPage() {
-  const router=useRouter()
   const searchParams=useSearchParams()
   const [loading,setLoading]=useState(false)
   const [posts,setPosts]=useState<Posts[]>([])
   const [username,setUsername]=useState("")
   const userIds=searchParams.get('userId')
-   const userId=useUserInfo(state=>state.userId)
-        const setUserId=useUserInfo(state=>state.setUserId)
+  const userId=useUserInfo(state=>state.userId)
+  const setUserId=useUserInfo(state=>state.setUserId)
   useEffect(()=>{
     const fetchUser=async()=>{
       try{
