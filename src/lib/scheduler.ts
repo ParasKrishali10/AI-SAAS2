@@ -11,7 +11,7 @@ export async function processScheduledPosts(){
 
         },
         include:{
-            server:true,
+
             user:true
         },take:10
     })

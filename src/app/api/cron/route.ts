@@ -25,7 +25,6 @@ export async function GET(request:Request)
         }
       },
       include:{
-        server:true,
         user:true
       },
       take:10
