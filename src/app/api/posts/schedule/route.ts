@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 
 export async function POST(req:Request){
+  const {userId,serverId,channelId,description,generatedContent,imageUrls,scheduledFor}=await req.json();
+  if (!userId || !serverId || !channelId || !generatedContent || !scheduledFor) {
 
-    const {userId,serverId,channelId,description,generatedContent,imageUrls,scheduledFor}=await req.json();
-      if (!userId || !serverId || !channelId || !generatedContent || !scheduledFor) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
@@ -13,14 +13,12 @@ export async function POST(req:Request){
       const post=await prisma.scheduledPost.create({
         data:{
             userId,
-            serverId,channelId,
+            guildId:serverId,
+           channelId,
             description,generatedContent,
             imageUrls:imageUrls||[],
             scheduledFor: new Date(scheduledFor),
             status:'SCHEDULED'
-        },
-        include:{
-            server:true
         }
       })
 
@@ -46,9 +44,7 @@ export async function GET(req:Request)
 
     const posts=await prisma.scheduledPost.findMany({
         where:{userId},
-        include:{
-            server:true
-        },orderBy:{
+        orderBy:{
             scheduledFor:'asc'
         }
     })

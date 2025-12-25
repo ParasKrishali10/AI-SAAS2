@@ -49,7 +49,7 @@ CREATE TABLE "ConnectedServer" (
 CREATE TABLE "ScheduledPost" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "serverId" TEXT NOT NULL,
+    "guildId" TEXT NOT NULL,
     "channelId" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "generatedContent" TEXT,
@@ -89,6 +89,3 @@ ALTER TABLE "ConnectedServer" ADD CONSTRAINT "ConnectedServer_userId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "ScheduledPost" ADD CONSTRAINT "ScheduledPost_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ScheduledPost" ADD CONSTRAINT "ScheduledPost_serverId_fkey" FOREIGN KEY ("serverId") REFERENCES "ConnectedServer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

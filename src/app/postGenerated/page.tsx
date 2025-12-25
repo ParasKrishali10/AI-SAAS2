@@ -41,7 +41,7 @@ export default function PostGenerated() {
   const images=usePostStore((s)=>s.images)
   const searchParams=new URLSearchParams()
   const [generatedImages, setGeneratedImages] = useState(false);
-  const [contents, setContents] = useState(content);
+  const setContent = usePostStore((s) => s.setContent);
   const [servers,setServers]=useState<DiscordServer[]>([])
   const [channelsByServer,setChannelsByServer]=useState<ChannelsByServer>({})
   const [channels,setChannels]=useState<DiscordChannel[]>([])
@@ -151,19 +151,26 @@ setRedirectUrl(`${window.location.origin}/api/discord/callback`);
   }
 
   const handleSchedule=async()=>{
+    console.log("Scnacnkan")
     if(!selectedChannel || !selectedServer || !scheduledTime )
     {
       toast.error("Please fill all fields")
       return
     }
     setScheduling(true)
+    console.log(userId)
+    console.log(selectedServer)
+    console.log(selectedChannel)
+    console.log(description)
+    console.log(content)
+
     try{
       const response=await axios.post('/api/posts/schedule',{
         userId,
         serverId:selectedServer,
         channelId:selectedChannel,
         description,
-        generatedContent:contents,
+        generatedContent:content,
         imageUrls:images,
          scheduledFor: new Date(scheduledTime).toISOString(),
       })
@@ -175,7 +182,7 @@ setRedirectUrl(`${window.location.origin}/api/discord/callback`);
     }catch(error)
     {
       toast.error("Failed to schedule your post")
-      console.log("error")
+      console.log(error)
       return
 
     }finally{
@@ -229,7 +236,7 @@ setRedirectUrl(`${window.location.origin}/api/discord/callback`);
 
           <textarea
             value={content}
-            onChange={(e) => setContents(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
             className="text-lg w-full h-64 p-4 rounded-lg resize-none bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
         </div>
