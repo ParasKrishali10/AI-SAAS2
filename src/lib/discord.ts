@@ -1,5 +1,5 @@
 import { DiscordUser,DiscordChannel,DiscordGuild } from "@/types";
-const DISCORD_API='https://discord.com/api';
+const DISCORD_API='https://discord.com/api/v10';
 
 export async function exchangeCode(code:string){
     const params=new URLSearchParams({
@@ -16,6 +16,9 @@ export async function exchangeCode(code:string){
             'Content-Type': 'application/x-www-form-urlencoded',
         }
     })
+
+    const data=await response.json()
+    console.log('Token Response:', data);
     if(!response.ok){
         throw new Error('Failed to exchange code for token');
 
