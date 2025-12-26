@@ -17,8 +17,7 @@ export async function exchangeCode(code:string){
         }
     })
 
-    const data=await response.json()
-    console.log('Token Response:', data);
+
     if(!response.ok){
         throw new Error('Failed to exchange code for token');
 
