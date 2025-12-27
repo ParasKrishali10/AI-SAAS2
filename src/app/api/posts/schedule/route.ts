@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { uploadBase64Image } from "@/lib/uploadImage";
 
 
 export async function POST(req:Request){
@@ -10,13 +11,30 @@ export async function POST(req:Request){
   }
 
   try{
+
+    let storedUrls:string[]=[]
+    if(imageUrls && imageUrls.length>0)
+    {
+      const baseTimestamp = Date.now();
+
+storedUrls = await Promise.all(
+  imageUrls.map((base64: string, index: number) =>
+    uploadBase64Image(
+      base64,
+      `post-${baseTimestamp}-${index}.png`
+    )
+  )
+);
+
+    }
+
       const post=await prisma.scheduledPost.create({
         data:{
             userId,
             guildId:serverId,
            channelId,
             description,generatedContent,
-            imageUrls:imageUrls||[],
+            imageUrls:storedUrls||[],
             scheduledFor: new Date(scheduledFor),
             status:'SCHEDULED'
         }

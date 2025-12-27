@@ -1,3 +1,4 @@
+import { uploadBase64Image } from "@/lib/uploadImage";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 const client=new OpenAI({
@@ -57,8 +58,10 @@ const completion=await client.chat.completions.create({
 }
 
 
-async function generateHuggingFaceImages(prompts: string[]): Promise<string[]> {
-  const imageUrls: string[] = [];
+async function generateHuggingFaceImages(
+  prompts: string[]
+): Promise<string[]> {
+  const images: string[] = [];
 
   for (const prompt of prompts) {
     try {
@@ -89,12 +92,11 @@ async function generateHuggingFaceImages(prompts: string[]): Promise<string[]> {
       const buffer = Buffer.from(await blob.arrayBuffer());
       const base64 = buffer.toString("base64");
 
-      imageUrls.push(`data:image/png;base64,${base64}`);
-
+      images.push(`data:image/png;base64,${base64}`);
     } catch (error) {
-      console.error(" Image generation error:", error);
+      console.error("Image generation error:", error);
     }
   }
 
-  return imageUrls;
+  return images;
 }

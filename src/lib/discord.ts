@@ -16,8 +16,6 @@ export async function exchangeCode(code:string){
             'Content-Type': 'application/x-www-form-urlencoded',
         }
     })
-
-
     if(!response.ok){
         throw new Error('Failed to exchange code for token');
 
