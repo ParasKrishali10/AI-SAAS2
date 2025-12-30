@@ -49,13 +49,15 @@ export default function Navbar() {
 
 
       <div>
-        <button onClick={()=>{setId(0)}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==0?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==0?"text-white ":" text-gray-600 "} scale-100 hover:scale-110 transition duration-500 ease-in-out  hover:text-white`}>
+        <button onClick={()=>{setId(0);
+          router.push("/dashboard")}}
+      className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==0?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==0?"text-white ":" text-gray-600 "} scale-100 hover:scale-110 transition duration-500 ease-in-out  hover:text-white`}>
           <LayoutDashboard className="mt-0.5"/>
           <span>Dashboard</span>
         </button>
       </div>
       <div className="mt-6">
-        <button onClick={()=>{setId(1)
+        <button onClick={()=>{setId(1);
           router.push("/postCreator")
         }} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==1?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==1?"text-white ":"text-gray-600 "}  scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
           <FilePlus className="mt-0.5"/>
@@ -63,7 +65,8 @@ export default function Navbar() {
         </button>
       </div>
       <div className="mt-6">
-     <button onClick={()=>{setId(2)}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==2?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==2?"text-white ":" text-gray-600 "} scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
+     <button onClick={()=>{setId(2);
+    router.push("/scheduled")}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==2?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==2?"text-white ":" text-gray-600 "} scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
           <Clock4 className="mt-0.5"/>
           <span className="">Scheduled Post</span>
         </button>
