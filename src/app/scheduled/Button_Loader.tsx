@@ -1,7 +1,11 @@
 "use client"
 import { Clock,CircleCheck,OctagonAlert,Pencil,Copy,Trash2 } from 'lucide-react';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from 'next/image';
+import Drawer from './Drawer';
+import { useUserInfo } from '@/lib/userInfo';
+import toast from 'react-hot-toast';
+import axios from "axios";
 type PostStatus = "pending" | "posted" | "failed";
 type Post={
   id:number,
@@ -12,9 +16,27 @@ type Post={
   content:string,
   images:string
 }
+interface ScheduledPosts{
+   guildName:string;
+    guildIcon: string;
+    channelName: string | null;
+    status:string
+    id: string;
+    guildId: string;
+    channelId: string;
+    generatedContent: string | null;
+    imageUrls: string[];
+    scheduledFor: Date;
+}
 export default function Button(){
     const [allNo,setAllNo]=useState(5)
     const [id,setId]=useState(1)
+    const [editOpen,seteditOpen]=useState(false)
+    const [selectedPost,setSelectedPost]=useState("")
+    const [selectedChannel,setSelectedChannel]=useState("")
+    const [selectedContent,setSelectedContent]=useState("")
+    const userId=useUserInfo(s=>s.userId)
+    const [post,setPost]=useState<ScheduledPosts[]>([])
    const STATUS_UI = {
   pending: {
     label: "Pending",
@@ -118,8 +140,31 @@ export default function Button(){
     content: "Backend optimizations are complete ⚙️ Expect faster response times and improved reliability across the platform.",
     images: "/SM.jpg"
   }]
+  useEffect(()=>{
+    document.documentElement.style.overflow=editOpen?"hidden":""
+    document.body.style.overflow=editOpen?"hidden":""
+    return ()=>{
+      document.documentElement.style.overflow=""
+      document.body.style.overflow=""
+    }
+  },[editOpen])
+
+  useEffect(()=>{
+    const fetchPosts=async()=>{
+      try{
+        const response=await axios.get(`/api/posts/${userId}`)
+        const post=response.data.posts||[]
+        setPost(post)
+      }catch(error)
+      {
+        toast.error("Error in collecting the posts")
+        return
+      }
+    }
+  },[userId])
     return (
-        <div>
+      <>
+        <div className={`relative min-h-screen }`}>
              <div className='px-10 '>
               <input type="text" placeholder='Search Posts,channels,servers' className='border w-full p-3 text-cyan-600 text-lg rounded-lg border border-cyan-900 focus:outline-none focus:border-cyan-500'/>
             </div>
@@ -141,7 +186,7 @@ export default function Button(){
               <span className={`border rounded-full  text-xl  h-8 w-8 flex justify-center items-center font-bold text-medium ${id==4?"bg-gray-400": "text-cyan-500"} `}>{allNo}</span>
             </button>
           </div>
-<div className="mb-10 px-10 mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+<div className=" mb-10 px-10 mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
   {posts.map((p) => {
     const status = STATUS_UI[p.status];
     const Icon = status.icon;
@@ -204,7 +249,12 @@ export default function Button(){
 
             {p.status === "pending" && (
               <div className="flex gap-4 mt-4">
-                <button className="flex cursor-pointer justify-center items-center bg-cyan-700 w-full py-2 rounded-xl scale-100 hover:scale-110 transition ease-in-out duration-500">
+                <button className="flex cursor-pointer justify-center items-center bg-cyan-700 w-full py-2 rounded-xl scale-100 hover:scale-110 transition ease-in-out duration-500" onClick={()=>{
+                  setSelectedPost(String(p.id));
+                  setSelectedChannel(p.channel);
+                  seteditOpen(true);
+                  setSelectedContent(p.content)
+                }}>
                   <Pencil className="mr-2" />
                   <span className='text-lg font-md'>Edit</span>
                 </button>
@@ -229,5 +279,25 @@ export default function Button(){
 
 
         </div>
+     {editOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
+          onClick={() => seteditOpen(false)}
+        />
+      )}
+
+  {editOpen && (
+
+        <div className="fixed inset-y-0 right-0 z-50 w-[420px] ">
+          <Drawer open={editOpen} initialContent={selectedContent} initialChannel={selectedChannel} post={selectedPost} onClose={()=>{
+            seteditOpen(false)
+            setSelectedPost("")
+          }} />
+
+        </div>
+  )}
+
+
+        </>
     )
 }
