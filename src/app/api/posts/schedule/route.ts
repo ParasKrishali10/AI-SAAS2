@@ -40,6 +40,19 @@ storedUrls = await Promise.all(
         }
       })
 
+      console.log(post.id)
+
+      // const mess=await prisma.messageReaction.create({
+      //   data:{
+      //     messageId:post.id,
+      //     channelId,
+      //     guildId:serverId,
+      //     emoji:"TOTAL",
+      //     count:0
+      //   }
+      // })
+      // console.log(mess)
+
       return NextResponse.json({ success: true, post });
 
   }catch(error:any)

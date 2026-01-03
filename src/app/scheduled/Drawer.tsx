@@ -3,12 +3,16 @@ import {CircleX,Save} from 'lucide-react';
 import { useState } from "react"
 import {motion,AnimatePresence,type Variants} from "framer-motion"
 import toast from 'react-hot-toast';
+import axios from 'axios';
+import { a } from 'framer-motion/client';
+import { useRouter } from 'next/navigation';
 type DrawerProps = {
   open: boolean;
   initialContent: string;
   initialChannel: string;
   post: string;
   onClose: () => void;
+  onSaved:()=>Promise<void>
 };
 
 const drawerVariants: Variants = {
@@ -32,10 +36,11 @@ const drawerVariants: Variants = {
 };
 
 
-export default function Drawer({open,initialContent,initialChannel,post,onClose}:DrawerProps){
+export default function Drawer({open,onSaved,initialContent,initialChannel,post,onClose}:DrawerProps){
     const [changeContent,setChangeContent]=useState(initialContent)
     const [dirty,setDirty]=useState(false)
     const [save,setSave]=useState(false)
+    const router=useRouter()
     const handleClosing=()=>{
       if(dirty && !save)
       {
@@ -45,6 +50,25 @@ export default function Drawer({open,initialContent,initialChannel,post,onClose}
       toast("Content saved successfully")
       onClose()
     }
+
+    const handleSave=async()=>{
+      console.log("rac")
+      try{
+        const res=await axios.put("/api/posts",{
+          postId:post,
+          content:changeContent
+        })
+        setSave(true)
+        setDirty(false)
+        toast.success("Content Saved")
+        onSaved()
+        onClose()
+      }catch(error)
+      {
+
+      }
+    }
+
     return (
         <AnimatePresence>
              <motion.div
@@ -89,7 +113,9 @@ export default function Drawer({open,initialContent,initialChannel,post,onClose}
                     </div>
                 </div>
                 <div className=' px-6 py-6'>
-                    <button className='bg-gradient-to-r from-blue-400 to-purple-400 w-full p-3 text-xl rounded-xl flex justify-center cursor-pointer font-semibold items-center gap-2 scale-100 hover:scale-105 transition ease-in-out duration-500' onClick={()=>setSave(true)}>
+                    <button onClick={()=>{setSave(true);
+
+                      handleSave()}} className='bg-gradient-to-r from-blue-400 to-purple-400 w-full p-3 text-xl rounded-xl flex justify-center cursor-pointer font-semibold items-center gap-2 scale-100 hover:scale-105 transition ease-in-out duration-500' >
                         <Save className="w-6 h-6 mr-2" />
                         Save Changes
                    </button>

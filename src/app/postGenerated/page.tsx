@@ -183,6 +183,16 @@ useEffect(()=>{
     toast("Wait for 3 sec while we fetch your channels")
   }
 
+  // const handleSync=async()=>{
+  //   try{
+  //     const res=await axios.post("/api/server/sync",{serverId:selectedServer})
+  //   }catch(error)
+  //   {
+  //     alert("Syncing fails")
+  //     console.log(error)
+  //   }
+  // }
+
   return (
     <div className="relative min-h-screen text-white">
       {loading && (
@@ -396,6 +406,13 @@ useEffect(()=>{
                     </button>
 
             </div>
+            {/* <div className="flex justify-center items-center mt-6">
+           <button className="mt-6 text-white  bb-cyan-800 p-4 text-xl text-black font-medium rounded-md cursor-pointer flex gap-2 items-center justify-center " onClick={handleSync}>
+                             <SendHorizontal/>
+                          <span>SYNC channels</span>
+                    </button>
+
+            </div> */}
 
 
         </div>

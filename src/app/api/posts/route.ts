@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export  async function GET(req:Request){
    try{
@@ -23,24 +23,31 @@ export  async function GET(req:Request){
     status: true,
   },
       orderBy:{
-          scheduledFor:"asc"
+          scheduledFor:"desc"
       }
      })
      const servers = await prisma.connectedServer.findMany({
   where: { userId },
+  include:{
+    channels:true
+  }
 })
 
 const postWithServerInfo=posts.map(post=>{
   const server=servers.find(
     s=>s.guildId===post.guildId
   )
+  const channel=server?.channels.find(
+    (c)=>c.channelId===post.channelId
+  )
   return {
     ...post,
     guildName:server?.guildName||"",
     guildIcon:server?.guildIcon ||"",
-    channelName:server?.channelId===post.channelId?server.channelName:""
+    channelName:channel?.channelName
   }
 })
+//  console.log(postWithServerInfo)
 
        return NextResponse.json(postWithServerInfo, { status: 200 });
     }catch(error:any)
@@ -48,4 +55,51 @@ const postWithServerInfo=posts.map(post=>{
         console.log(error)
         return NextResponse.json({error:error},{status:500})
     }
+}
+
+export async function PUT(req:NextRequest)
+{
+  const {postId,content}=await req.json()
+  if(!postId || !content)
+  {
+    return NextResponse.json("Missing Arguments",{status:404})
+  }
+  try{
+   const post = await prisma.scheduledPost.update({
+  where: { id: postId },
+  data: {
+    generatedContent: content,
+  },
+});
+
+return NextResponse.json("Updated Changes",{status:200})
+
+  }catch(error)
+  {
+    return NextResponse.json("Unexpected Error happens",{status:500})
+  }
+}
+
+export async function DELETE(req:NextRequest){
+   const {searchParams}=new URL(req.url);
+   const postId=searchParams.get("postId")
+
+   if(!postId)
+   {
+
+    return NextResponse.json("Post Id is not passed as argument",{status:404})
+   }
+   try{
+    const post=await prisma.scheduledPost.delete({
+      where:{
+        id:postId
+      }
+    })
+    console.log(post)
+    return NextResponse.json("Post Deleted Successfully",{status:200})
+   }catch(error)
+   {
+    console.log(error)
+    return NextResponse.json("Internal error",{status:500})
+   }
 }

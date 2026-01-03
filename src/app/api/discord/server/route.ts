@@ -5,6 +5,7 @@ import { error } from "console";
 import { create } from "domain";
 
 import { prisma } from "@/lib/prisma";
+import { channel } from "diagnostics_channel";
 
 
 export async function GET(request:Request)
@@ -65,6 +66,7 @@ export async function GET(request:Request)
 
 export async function POST(req:Request)
 {
+
     const {serverId}=await req.json();
     if(!serverId)
     {
@@ -75,11 +77,34 @@ export async function POST(req:Request)
             where:{id:serverId}
         })
             if (!server) {
+                console.log(serverId)
       return NextResponse.json({ error: 'Server not found' }, { status: 404 });
 
     }
 
     const channels=await getGuildChannels(server.guildId)
+    await prisma.connectedChannel.deleteMany({
+        where:{guildId:server.guildId}
+    })
+    const p=await Promise.all(channels.map(async(ch)=>{
+        await prisma.connectedChannel.create({
+            data:{
+                  serverId:server.id,
+            guildId:server.guildId,
+            channelId:ch.id,
+            channelName:ch.name
+            }
+        })
+    }))
+    // await prisma.connectedChannel.createMany({
+    //     data:channels.map((ch)=>{
+    //         serverId:server.id,
+    //         guildId:server.guildId,
+    //         channelId:ch.id,
+    //         channelName:ch.name
+
+    //     })
+    // })
     return NextResponse.json({ channels });
 
     }catch(error)

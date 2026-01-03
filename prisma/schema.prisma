@@ -52,6 +52,7 @@ model ConnectedServer{
   channelId String?
   channelName String?
   createdAt DateTime @default(now())
+  channels ConnectedChannel[]
   user User @relation(fields: [userId], references: [id])
 
 
@@ -85,6 +86,36 @@ model ScheduledPost {
   @@index([status])
 }
 
+model ConnectedChannel{
+  id String @id @default(cuid())
+  serverId String
+  guildId String
+  channelId String
+  channelName String
+
+  server ConnectedServer @relation(fields:[serverId],references: [id])
+  @@unique([guildId,channelId])
+}
+
+model DailyReactionStat{
+  id String @id @default(cuid())
+  messageId String
+  date DateTime
+  totalReactions Int @default(0)
+  @@unique([messageId,date])
+}
+
+model MessageReaction{
+  id String @id @default(cuid())
+  messageId String
+  channelId String
+  guildId String
+  emoji String
+  count Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([messageId,emoji])
+}
 
 enum Status{
   SCHEDULED
