@@ -1,7 +1,7 @@
 import ReactionAnalytics from "@/components/ReactionAnalytics";
-
+import Timeline from "./Timeline";
 export default function analytics(){
     return <div>
-        <ReactionAnalytics messageId={"1457049390815641600"}/>
+        <Timeline/>
     </div>
 }

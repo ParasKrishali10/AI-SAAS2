@@ -171,3 +171,137 @@ body {
     transform: translateY(-400%);
   }
 }
+
+.timeline{
+  --axis-x: 32px;
+  position: relative;
+  padding-left: 60px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: var(--axis-x);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+
+  background: linear-gradient(
+    to bottom,
+    #22d3ee,
+    #6366f1
+  );
+
+  box-shadow:
+    0 0 12px rgba(34,211,238,0.6),
+    0 0 32px rgba(99,102,241,0.35);
+}
+
+
+.dot {
+  position: absolute;
+  left: 22px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+    background: #22d3ee;
+animation: pulse 2.5s infinite;
+  box-shadow:
+    0 0 0 4px rgba(34,211,238,0.15),
+    0 0 16px rgba(34,211,238,0.9),
+    0 0 32px rgba(99,102,241,0.6);
+
+}
+
+.date-badge {
+  position: relative;
+  left: var(--axis-x);
+  transform: translateX(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(180deg, #0ea5e9, #6366f1);
+  color: white;
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.15),
+    0 8px 30px rgba(99,102,241,0.5);
+
+  backdrop-filter: blur(8px);
+  color: #22d3ee;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+
+.card-timeline {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17,24,39,0.8),
+      rgba(3,7,18,0.9)
+    );
+
+  border-radius: 16px;
+  padding: 18px 20px;
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 20px 60px rgba(0,0,0,0.6);
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.card-timeline:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(34,211,238,0.3),
+    0 30px 80px rgba(0,0,0,0.8);
+}
+
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.content {
+  color: #c7d2fe;
+}
+
+.time {
+  color: #67e8f9;
+}
+
+.status.posted {
+  color: #22c55e;
+}
+
+.status.failed {
+  color: #ef4444;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 20% -10%, #0ea5e933, transparent 60%),
+    radial-gradient(800px 400px at 90% 10%, #6366f133, transparent 60%),
+    linear-gradient(180deg, #05070f, #03040a);
+  color: #e5e7eb;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,211,238,0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(34,211,238,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,211,238,0); }
+}
