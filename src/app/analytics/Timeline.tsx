@@ -1,6 +1,10 @@
 "use client"
 import { AnimatePresence, motion } from "framer-motion"
 import { AnimatedReactions } from "./Emoji"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useUserInfo } from "@/lib/userInfo"
+import toast from "react-hot-toast"
 
 interface PostProps {
   date: string
@@ -10,270 +14,115 @@ interface PostProps {
   time: string
   status: string
 }
+interface ScheduledPosts{
+    guildName:string;
+    guildIcon: string;
+    channelName: string | null;
+    status:string
+    id: string;
+    guildId: string;
+    channelId: string;
+    generatedContent: string | null;
+    imageUrls: string[];
+    scheduledFor: Date;
+
+}
+interface TransformedPost {
+  id: number;
+  source: string;
+  channel: string | null;
+  message: string | null;
+  time: string;
+  status: string;
+}
+
+interface GroupedPosts {
+  date: string;
+  posts: TransformedPost[];
+}
+
 
 export default function Timeline() {
-  const timelineData = [
-    {
-      date: "12/30/2025",
-      posts: [
-        {
-          id: 1,
-          source: "Dev Community",
-          channel: "#news",
-          message:
-            "Check out our latest tutorial on building Discord bots with AI integration.",
-          time: "09:28 PM",
-          status: "posted",
-        },
-        {
-          id: 2,
-          source: "Dev Community",
-          channel: "#announcements",
-          message:
-            "We’ve released a new SDK version with performance improvements and bug fixes.",
-          time: "06:10 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/03/2026",
-      posts: [
-        {
-          id: 3,
-          source: "Marketing Team",
-          channel: "#campaigns",
-          message:
-            "New blog post is live! Learn the best practices for Discord automation in 2024.",
-          time: "09:28 PM",
-          status: "posted",
-        },
-        {
-          id: 4,
-          source: "Marketing Team",
-          channel: "#campaigns",
-          message:
-            "Scheduled email campaign failed due to missing audience segment.",
-          time: "07:02 PM",
-          status: "failed",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-    {
-      date: "01/04/2026",
-      posts: [
-        {
-          id: 5,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "We’re experiencing high server load. Our team is working on a fix. Updates coming soon.",
-          time: "06:28 PM",
-          status: "failed",
-        },
-        {
-          id: 6,
-          source: "Support Guild",
-          channel: "#updates",
-          message:
-            "Server stability has improved. Monitoring continues over the next 24 hours.",
-          time: "08:14 PM",
-          status: "posted",
-        },
-      ],
-    },
-  ]
+     const userId=useUserInfo(s=>s.userId)
+    const [groupPost,setGroupPost]=useState<GroupedPosts[]>([])
+    const [timeliners,setTimeliners]=useState<ScheduledPosts[]>([])
+
+
+    useEffect(()=>{
+        const fetchPosts=async()=>{
+          toast("fetch post work")
+            const response=await axios.get(`/api/posts/?userId=${userId}`)
+            const posts=await response.data ||[]
+            setTimeliners(posts)
+            console.log(posts)
+           setGroupPost(transformScheduledPosts(posts))
+        }
+        fetchPosts()
+    },[userId])
+
+    const formatDate=(date:Date)=>{
+      return date.toLocaleDateString("en-IN")
+    }
+
+    const formatTime=(date:Date)=>{
+      return date.toLocaleTimeString("en-IN",{
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:true
+      })
+    }
+
+    const transformScheduledPosts=(data:ScheduledPosts[]):GroupedPosts[]=>{
+       toast("transdofm post work")
+       console.log(data.map(d => d.status))
+
+       const filtered=data.filter(d=>d.status==="POSTED")
+     const grouped: Record<string, GroupedPosts> = {}
+
+  filtered.forEach((post) => {
+    const scheduledDate = new Date(post.scheduledFor)
+
+    const dateKey = formatDate(scheduledDate)
+
+    if (!grouped[dateKey]) {
+      grouped[dateKey] = {
+        date: dateKey,
+        posts: [],
+      }
+    }
+
+    grouped[dateKey].posts.push({
+      id: Number(post.id),
+      source: post.guildName,
+      channel: post.channelName
+        ? `#${post.channelName}`
+        : null,
+      message: post.generatedContent,
+      time: formatTime(scheduledDate),
+      status: post.status,
+    })
+  })
+
+  console.log(grouped)
+  return Object.values(grouped).sort(
+    (a,b)=>new Date(a.date).getTime()-new Date(b.date).getTime()
+  )
+    }
+
+
+
+
+  const limitWords=(text:string):string=>{
+
+    return text.substring(0,100)+"....."
+  }
 
   return (
     <div className="relative px-8 py-10">
 
       <div className="absolute left-6 top-0 h-full w-[2px] bg-gradient-to-b from-cyan-400 to-indigo-500 shadow-[0_0_16px_rgba(34,211,238,0.6)]" />
 
-      {timelineData.map((group) => (
+      {groupPost.map((group) => (
         <div key={group.date} className="mb-16 relative">
 
           <div className="relative z-10 mb-6 w-fit -translate-x-1/2 left-6 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500 px-4 py-1 text-sm font-semibold text-white shadow-lg">
@@ -319,19 +168,19 @@ export default function Timeline() {
                     <div className="text-cyan-300">{post.time}</div>
                     <div
                       className={`font-medium ${
-                        post.status === "posted"
+                        post.status === "POSTED"
                           ? "text-green-400"
                           : "text-red-400"
                       }`}
                     >
-                      {post.status === "posted" ? "Posted" : "Failed"}
+                      {post.status === "POSTED" ? "Posted" : "Failed"}
                     </div>
                   </div>
                 </div>
 
 
                 <p className="mt-2 text-slate-300 leading-relaxed">
-                  {post.message}
+                   {limitWords(post.message ?? "")}
                 </p>
                 <div className="absolute -top-0 right-24">
         <AnimatedReactions />

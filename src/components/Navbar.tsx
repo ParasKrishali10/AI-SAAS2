@@ -72,7 +72,7 @@ export default function Navbar() {
         </button>
       </div>
       <div className="mt-6">
-        <button onClick={()=>{setId(3)}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==3?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==3?"text-white ":" text-gray-600 "}  scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
+        <button onClick={()=>{setId(3);router.push("/analytics")}} className={`flex gap-3  text-xl font-semibold cursor-pointer p-3 w-full rounded-md ${id==3?"bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] ":" bg-gray-900 "} ${id==3?"text-white ":" text-gray-600 "}  scale-100 hover:scale-110 transition duration-500 ease-in-out hover:text-white`} >
           <ChartColumn className="mt-0.5"/>
           <span className="mt-0.5">Analytics</span>
         </button>

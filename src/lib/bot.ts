@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js"
 import { prisma } from "./prisma"
 import {broadcast} from "./websocket"
-import { create } from "domain"
+
 
 const client = new Client({
   intents: [
