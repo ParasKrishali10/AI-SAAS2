@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
+import { pusherServer } from "@/lib/pusher-server";
 export  async function GET(req:Request){
    try{
      const {searchParams}=new URL(req.url);
@@ -47,7 +47,12 @@ const postWithServerInfo=posts.map(post=>{
     channelName:channel?.channelName
   }
 })
-//  console.log(postWithServerInfo)
+await pusherServer.trigger(
+      "test-channel",
+      "test-event",
+      {message:"Hello post generated successfully"}
+    )
+
 
        return NextResponse.json(postWithServerInfo, { status: 200 });
     }catch(error:any)

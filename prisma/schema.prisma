@@ -117,9 +117,24 @@ model MessageReaction{
   @@unique([messageId,emoji])
 }
 
+model Notifications{
+  id String @id @default(cuid())
+  userId String
+  type NotifyType @default(REACTION)
+  message String
+  read Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
 enum Status{
   SCHEDULED
   POSTED
   FAIL
 
+}
+
+enum NotifyType{
+  REACTION
+  POST_PUBLISHED
+  SCHEDULED
 }

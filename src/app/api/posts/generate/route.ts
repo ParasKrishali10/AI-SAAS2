@@ -1,3 +1,4 @@
+import { pusherServer } from "@/lib/pusher-server";
 import { uploadBase64Image } from "@/lib/uploadImage";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
@@ -36,12 +37,15 @@ const completion=await client.chat.completions.create({
       max_tokens: 500,
 })
 
+
   const content=completion.choices[0]?.message?.content || ""
    let imageUrls: string[] = [];
 
     if (generatedImages) {
       imageUrls = await generateHuggingFaceImages([prompts]);
     }
+
+
 
     return NextResponse.json({
       content,

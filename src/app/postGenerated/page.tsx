@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useUserInfo } from "@/lib/userInfo";
 import { div } from "framer-motion/client";
 import { MainLoader } from "@/components/MainLoader";
+
 interface SchedulingModalProps{
   userId:string
   post:{
@@ -120,7 +121,7 @@ useEffect(()=>{
 
   const checkBotLoadChannels=async(serverId:string)=>{
     try{
-      const botRes=await axios.get(`/api/discord/check-bot?guildId=${serverId}`)
+      const botRes=await axios.get(`/api/discord/check-bot?guildId=${serverId}&userId=${userId}`)
       if(!botRes.data.botPresent)
       {
         setBotMissing(true)

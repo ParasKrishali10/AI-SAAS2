@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 import Delete from './Delete';
 import { MainLoader } from '@/components/MainLoader';
+import { pusherClient } from '@/lib/pusher-client';
 type PostStatus = "SCHEDULED" | "POSTED" | "FAIL";
 type Post={
   id:number,
@@ -95,6 +96,8 @@ const filteredPost=(status:string)=>{
   }
 
 }
+
+
 useEffect(()=>{
   setLoading(false)
 },[post.length])

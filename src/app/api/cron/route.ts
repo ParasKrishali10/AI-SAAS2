@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { postToDiscord } from "@/lib/discord";
 import { error } from "console";
+import { pusherServer } from "@/lib/pusher-server";
 
 export async function GET(request:Request)
 {
@@ -50,6 +51,14 @@ export async function GET(request:Request)
               discordMessageId:message.id
             }
           })
+
+         await pusherServer.trigger(
+            `user-${post.userId}`,
+            "notification",
+            {
+              message: `Your scheduled post (${post.scheduledFor}) has been successfully published.`
+            }
+          )
 
           console.log(`✅ Posted successfully: ${post.id}`);
           return { success: true, postId: post.id };
