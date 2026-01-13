@@ -1,6 +1,6 @@
 "use client"
 import { Clock,CircleCheck,OctagonAlert,Pencil,Copy,Trash2, TableOfContents, Grid2x2 } from 'lucide-react';
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import Image from 'next/image';
 import Drawer from './Drawer';
 import { useUserInfo } from '@/lib/userInfo';
@@ -9,6 +9,9 @@ import axios from "axios";
 import Delete from './Delete';
 import { MainLoader } from '@/components/MainLoader';
 import { pusherClient } from '@/lib/pusher-client';
+import FloatingSidebar from '@/components/Sidebar';
+import PostCardSkeleton from './PostCard';
+import Truck from '@/components/Truck';
 type PostStatus = "SCHEDULED" | "POSTED" | "FAIL";
 type Post={
   id:number,
@@ -49,6 +52,8 @@ export default function Button(){
     const [searchText,setSearchText]=useState("")
     const [statusFilter, setStatusFilter] = useState<string>("ALL")
     const [loading,setLoading]=useState(true)
+    const [cursor,setCursor]=useState("")
+    const loaderRef=useRef<HTMLDivElement|null>(null)
     useEffect(()=>{
       let filtered=post
         if (statusFilter !== "ALL") {
@@ -98,9 +103,10 @@ const filteredPost=(status:string)=>{
 }
 
 
-useEffect(()=>{
-  setLoading(false)
-},[post.length])
+useEffect(() => {
+  if (post.length > 0) setLoading(false)
+}, [post.length])
+
 
   useEffect(()=>{
     document.documentElement.style.overflow=editOpen ?"hidden":""
@@ -111,22 +117,15 @@ useEffect(()=>{
     }
   },[editOpen])
 
-  useEffect(()=>{
-    try{
-      setLoading(true)
-      fetchPosts()
-    }catch(error)
-    {
 
-    }finally{
 
-    }
-  },[userId])
-  const fetchPosts=async()=>{
+
+  const fetchPosts=useCallback(async()=>{
       try{
-        const response=await axios.get(`/api/posts/?userId=${userId}`)
-        const posts=await response.data ||[]
-        // console.log(posts)
+        console.log("helel")
+        const response=await axios.get(`/api/posts/fetching/?userId=${userId}&cursor=${cursor}`)
+        const posts=response.data.postWithServerInfo ||[]
+        setCursor(response.data.nextCursor)
        posts.forEach((p:any) => {
   if (p.status === "POSTED") {
     setPosted(prev => prev + 1)
@@ -137,247 +136,283 @@ useEffect(()=>{
   }
 })
 
-        setAll(posts.length)
-        setFinalPost(posts)
-        setPost(posts)
-
+       setAll(prev => prev + posts.length)
+        setPost(prev => [...prev, ...posts])
+    setFinalPost(prev => [...prev, ...posts])
       }catch(error)
       {
         console.log(error)
         toast.error("Error in collecting the posts")
         return
       }
+    },[userId,cursor])
+
+
+    useEffect(()=>{
+    if(!loaderRef.current || !cursor){
+      return
     }
-    return (
-      <>
-        <div className={`relative min-h-screen }`}>
-          {loading && (
-                  <div className=" min-h-screen flex justify-center items-center bg-black">
-                  <MainLoader
-            title="Fetching"
-            words={["Content", "Servers", "Channels", "Posts","Content","Images" ]}
-          />
+    const observer=new IntersectionObserver(
+      (entries)=>{
+        if(entries[0].isIntersecting)
+        {
+          fetchPosts()
+        }
+      },{threshold:1}
+    )
+    observer.observe(loaderRef.current)
+        return ()=>observer.disconnect()
 
-                  </div>
+    },[cursor])
+
+    useEffect(() => {
+  const load = async () => {
+    try {
+      await fetchPosts()
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if (userId) load()
+}, [userId])
+
+  return (
+    <>
+      {/* MAIN LAYOUT: Flexbox ensures side-by-side alignment */}
+      <div className="flex min-h-screen bg-slate-950 selection:bg-cyan-500/30 selection:text-cyan-200">
+
+        {/* 1. SIDEBAR COLUMN */}
+        {/* Sticky keeps it fixed while scrolling, but 'relative' to the flex flow */}
+        {!loading && (
+
+        <div className="w-20 flex-shrink-0 z-50 relative">
+            <div className="sticky top-0 h-screen w-full">
+                <FloatingSidebar />
+            </div>
+        </div>
+        )}
+
+        {/* 2. MAIN CONTENT COLUMN */}
+        {/* flex-1 makes it take all remaining width */}
+        <div className="flex-1 min-w-0 relative flex flex-col">
+
+            {/* Background Ambient Glow (Scoped to main content) */}
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px]"></div>
+            </div>
+
+            {/* Content Wrapper (Above Background) */}
+            <div className="relative z-10">
+                {loading && (
+                    <div className="min-h-screen flex justify-center items-center backdrop-blur-sm">
+                        <Truck/>                   </div>
                 )}
+
                 {!loading && (
-                    <div>
-                      <div >
-          <div className="p-10 flex justify-between">
-            <div className="">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">Scheduled Post</h1>
-                <h3 className="mt-3 font-semibold text-cyan-500 text-lg">Manage all your Discord scheduled content</h3>
+                    <>
+
+                        <div className="sticky top-0 z-40 w-full  ">
+                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+
+                            <div className="px-5 py-10 flex justify-between items-end">
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.25em] text-slate-500">
+                                        <span className="hover:text-cyan-400 cursor-pointer transition-colors duration-300">Main Dashboard</span>
+                                        <span className="text-cyan-800 font-bold">/</span>
+                                        <span className="text-cyan-400 font-bold drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">Scheduled Post</span>
+                                    </div>
+                                    <div className="relative">
+                                        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight">
+                                            Scheduled <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-lg">Posts</span>
+                                        </h1>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <span className="relative flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                            </span>
+                                            <p className="text-slate-400 text-xs font-mono tracking-wide uppercase">Your Posts Are Ready to Go Live</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Decorative Badge */}
+                                <div className="hidden md:block pb-2">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-cyan-500/20 bg-cyan-950/10 backdrop-blur-md">
+                                        <div className="w-1.5 h-1.5 rounded-sm bg-cyan-500 animate-pulse"></div>
+                                        <span className="text-[10px] font-mono text-cyan-400 tracking-widest">SYNCED</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* --- SEARCH BAR --- */}
+                        <div className="px-5 pt-8">
+                            <div className="relative group">
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
+                                <div className="relative flex items-center bg-slate-900 rounded-xl border border-white/10">
+                                    <div className="pl-4 text-slate-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                    </div>
+                                    <input
+                                        value={searchText}
+                                        onChange={(e) => setSearchText(e.target.value)}
+                                        type="text"
+                                        placeholder="Search query..."
+                                        className="w-full p-4 bg-transparent text-white text-lg focus:outline-none placeholder:text-slate-600 font-light tracking-wide"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* --- FILTERS --- */}
+                        <div className="mt-8 px-5 flex flex-wrap gap-4">
+                            {[
+                                { id: 1, label: "All Systems", count: all, filter: "ALL" },
+                                { id: 2, label: "Pending", count: pending, filter: "SCHEDULED" },
+                                { id: 3, label: "Deployed", count: posted, filter: "POSTED" },
+                                { id: 4, label: "Failed", count: failed, filter: "FAIL" },
+                            ].map((btn) => (
+                                <button
+                                    key={btn.id}
+                                    onClick={() => { setId(btn.id); setStatusFilter(btn.filter); }}
+                                    className={`relative overflow-hidden w-auto px-6 py-3 rounded-xl gap-3 cursor-pointer flex items-center justify-center transition-all duration-300 border ${id === btn.id ? "bg-cyan-500/10 border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.3)]" : "bg-slate-900/50 border-white/10 hover:border-white/30 hover:bg-slate-800"}`}
+                                >
+                                    <span className={`text-lg font-bold tracking-wide ${id === btn.id ? "text-cyan-400" : "text-slate-400"}`}>{btn.label}</span>
+                                    <span className={`rounded-md px-2 py-0.5 text-sm font-mono font-bold ${id === btn.id ? "bg-cyan-500 text-black" : "bg-slate-800 text-slate-500 border border-white/5"}`}>{btn.count}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* --- GRID --- */}
+                        <div className="mb-10 px-5 mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                            {finalPost.map((p,index) => {
+                                return (
+                                    <div key={index} className="group relative transition-all duration-500 hover:-translate-y-2">
+                                        {/* ... (Keep your existing Card Code exactly the same) ... */}
+                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                                        <div className="relative h-full flex flex-col rounded-2xl bg-slate-950/90 border border-white/10 backdrop-blur-xl p-6 overflow-hidden shadow-2xl">
+                                             {/* Card Header */}
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="relative">
+                                                        <div className="absolute inset-0 bg-cyan-400 blur-sm rounded-full opacity-50"></div>
+                                                        <Image src={`https://cdn.discordapp.com/icons/${p.guildId}/${p.guildIcon}.png`} alt={p.guildName} width={42} height={42} className="relative rounded-full border border-white/20 z-10" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <h2 className="text-lg font-bold text-white tracking-wide">{p.guildName}</h2>
+                                                        <h4 className="text-xs font-mono text-cyan-400 tracking-wider">#{p.channelName}</h4>
+                                                    </div>
+                                                </div>
+                                                {/* Status Badges */}
+                                                <div>
+                                                    {p.status === "SCHEDULED" && (
+                                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                                                        <span className="relative flex h-2 w-2">
+                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                                                        </span>
+                                                        <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">Pending</span>
+                                                    </div>
+                                                    )}
+                                                    {p.status === "POSTED" && (
+                                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                                        <CircleCheck className="h-3 w-3 text-emerald-500" />
+                                                        <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Posted</span>
+                                                    </div>
+                                                    )}
+                                                    {p.status === "FAIL" && (
+                                                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                                                        <OctagonAlert className="h-3 w-3 text-red-500" />
+                                                        <span className="text-xs font-bold text-red-500 uppercase tracking-widest">Failed</span>
+                                                    </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="mb-4">
+                                                <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5">
+                                                    <p className="text-sm text-slate-300 font-light leading-relaxed line-clamp-3">{p.generatedContent}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Image */}
+                                            <div className="group/image relative h-48 w-full rounded-xl overflow-hidden border border-white/10 bg-slate-900">
+                                                {p.imageUrls.length > 0 ? (
+                                                    <>
+                                                    <Image src={p.imageUrls[0]} alt="Content" fill className="object-cover transition-transform duration-700 group-hover/image:scale-110" />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
+                                                    </>
+                                                ) : (
+                                                    <div className="flex h-full items-center justify-center flex-col gap-2 text-slate-600">
+                                                    <div className="h-10 w-10 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center"><span className="text-xs">IMG</span></div>
+                                                    <span className="text-xs font-mono">NO SIGNAL</span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Footer */}
+                                            <div className="mt-auto pt-5">
+                                                <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                                                    <span className="text-[10px] uppercase text-slate-500 font-mono tracking-widest">Target Date</span>
+                                                    <span className="text-xs font-mono text-cyan-300">
+                                                    {new Date(p.scheduledFor).toLocaleString("en-IN", { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: true })}
+                                                    </span>
+                                                </div>
+                                                {p.status === "SCHEDULED" && (
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                    <button onClick={() => { setSelectedPost(String(p.id)); setSelectedChannel(p.channelName || ""); seteditOpen(true); setSelectedContent(p.generatedContent || ""); }} className="flex items-center justify-center gap-2 py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 transition-all hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] active:scale-95">
+                                                        <Pencil className="h-4 w-4" /><span className="text-sm font-semibold">Edit</span>
+                                                    </button>
+                                                    <button onClick={() => { setSelectedPost(String(p.id)); setDeletePost(true); }} className="flex items-center justify-center gap-2 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] active:scale-95">
+                                                        <Trash2 className="h-4 w-4" /><span className="text-sm font-semibold">Delete</span>
+                                                    </button>
+                                                    </div>
+                                                )}
+                                                {p.status !== "SCHEDULED" && (
+                                                    <div className="w-full py-2 rounded-lg border border-white/5 bg-white/5 text-center text-slate-500 text-xs font-mono cursor-not-allowed">
+                                                    ARCHIVED // READ ONLY
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                          {cursor &&
+                              <div ref={loaderRef} style={{ height: 20 }} >
+                                <PostCardSkeleton/>
+                                <PostCardSkeleton/>
+                              </div>
+                           }
+                        </div>
+                    </>
+                )}
             </div>
-            <div className="flex p-4 bg-gray-900 gap-4">
-                <button className="cursor-pointer">
-
-                    <Grid2x2 className="w-10 h-10 p-1 text-cyan-500 hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white rounded-lg"/>
-
-                </button>
-                <button className="cursor-pointer">
-                    <TableOfContents className="w-10 h-10 p-1 text-cyan-500 hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white rounded-lg"/>
-                </button>
-            </div>
-          </div>
-
-          </div>
-                           <div className='px-10 '>
-              <input value={searchText} onChange={(e)=>setSearchText(e.target.value)} type="text" placeholder='Search Posts,channels,servers' className='border w-full p-3 text-white text-lg transition-shadow duration-200
-    focus:outline-none
-    focus:shadow-lg
-    focus:shadow-cyan-500/50 rounded-lg border border-cyan-900 focus:outline-none focus:border-cyan-500'/>
-            </div>
-          <div className='mt-5 px-10 flex gap-4'>
-            <button onClick={()=>{setId(1);setStatusFilter("ALL")}} className={`w-auto p-3 h-11  rounded-xl gap-2 cursor-pointer  flex items-center justify-center ${id==1 ? "bg-gradient-to-r from-blue-400 to-purple-400" : "border border-cyan-500" } `}>
-              <span className={`text-xl font-bold ${id==1?"": "text-cyan-500"} `}>All</span>
-              <span className={`border rounded-full  text-xl  h-8 w-8 flex justify-center items-center font-bold  text-medium ${id==1?"bg-gray-400": "text-cyan-500"} `}>{all}</span>
-            </button>
-            <button onClick={()=>{setId(2);setStatusFilter("SCHEDULED")}} className={`w-auto p-3 h-11  rounded-xl gap-2 cursor-pointer  flex items-center justify-center ${id==2 ? "bg-gradient-to-r from-blue-400 to-purple-400" : "border border-cyan-500" } `}>
-              <span className={`text-xl font-bold ${id==2?"": "text-cyan-500"} `}>Pending</span>
-              <span className={`border rounded-full  text-xl  h-8 w-8 flex justify-center items-center font-bold text-medium ${id==2?"bg-gray-400": "text-cyan-500"} `}>{pending}</span>
-            </button>
-            <button onClick={()=>{setId(3);setStatusFilter("POSTED")}} className={`w-auto p-3 h-11  rounded-xl gap-2 cursor-pointer  flex items-center justify-center ${id==3 ? "bg-gradient-to-r from-blue-400 to-purple-400" : "border border-cyan-500" } `}>
-              <span className={`text-xl font-bold ${id==3?"": "text-cyan-500"} `}>Posted</span>
-              <span className={`border rounded-full  text-xl  h-8 w-8 flex justify-center items-center font-bold text-medium ${id==3?"bg-gray-400": "text-cyan-500"} `}>{posted}</span>
-            </button>
-            <button onClick={()=>{setId(4);setStatusFilter("FAIL")}} className={`w-auto p-3 h-11  rounded-xl gap-2 cursor-pointer  flex items-center justify-center ${id==4 ? "bg-gradient-to-r from-blue-400 to-purple-400" : "border border-cyan-500" } `}>
-              <span className={`text-xl font-bold ${id==4?"": "text-cyan-500"} `}>Failed</span>
-              <span className={`border rounded-full  text-xl  h-8 w-8 flex justify-center items-center font-bold text-medium ${id==4?"bg-gray-400": "text-cyan-500"} `}>{failed}</span>
-            </button>
-          </div>
-<div className=" mb-10 px-10 mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-  {finalPost.map((p) => {
-
-
-    return (
-      <div key={p.id} className="transition duration-500 hover:scale-105 hover:shadow-lg shadow-blue-500/50">
-        <div className="rounded-xl border border-cyan-500 p-6 h-full flex flex-col">
-
-
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 text-xl font-bold flex items-center justify-center">
-              <Image
-  src={`https://cdn.discordapp.com/icons/${p.guildId}/${p.guildIcon}.png`}
-  alt={p.guildName}
-  width={40}
-  height={40}
-  className="rounded-full"
-/>
-            </div>
-            <div>
-              <h2 className="text-xl font-bold leading-tight">{p.guildName}</h2>
-              <h4 className="text-lg text-cyan-500 font-semibold leading-tight">
-                #{p.channelName}
-              </h4>
-            </div>
-          </div>
-
-          <div className="mt-4 w-fit">
-            <div className='relative inline-flex'>
-
-           {p.status==="SCHEDULED" && (
-            <div>
-            <span
-              className={`pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-r from-[#F9B233]/60 to-[#F57C00]/60 blur-lg opacity-75 animate-pulse`}
-            />
-            <div
-              className={`relative z-10 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#F9B233] to-[#F57C00] px-4 py-2`}
-            >
-              <Clock className="h-5 w-5" />
-              <span className="text-lg font-semibold">Pending</span>
-            </div>
-
-            </div>
-           )}
-
-           {p.status==="POSTED" &&(
-            <div>
-              <span
-              className={`pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-r from-green-500/60 to-emerald-500/60 blur-lg opacity-75 animate-pulse`}
-            />
-            <div
-              className={`relative z-10 flex items-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-2`}
-            >
-              <CircleCheck className="h-5 w-5" />
-              <span className="text-lg font-semibold">Posted</span>
-            </div>
-            </div>
-           )}
-
-          {p.status==="FAIL" && (
-            <div>
-                <span
-              className={`pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-r from-red-500/60 to-orange-500/60 blur-lg opacity-75 animate-pulse`}
-            />
-            <div
-              className={`relative z-10 flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-500/60 to-orange-500/60 px-4 py-2`}
-            >
-              <OctagonAlert className="h-5 w-5" />
-              <span className="text-lg font-semibold">Failed</span>
-            </div>
-            </div>
-          )}
-
-
-
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <span className="text-lg font-semibold line-clamp-4">
-              {p.generatedContent}
-            </span>
-          </div>
-
-
-          <div className="mt-5 relative h-64 rounded-xl overflow-hidden bg-slate-800">
-            {p.imageUrls.length>0 ? (
-              <Image src={p.imageUrls[0]} alt="Image Failed" fill className="object-cover" />
-            ) : (
-              <div className="flex h-full items-center justify-center text-slate-500 text-sm">
-                No image
-              </div>
-            )}
-          </div>
-
-
-          <div className="mt-auto pt-4">
-            <span className="text-cyan-500">
-             Scheduled : { new Date(p.scheduledFor).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-            </span>
-
-            {p.status === "SCHEDULED" && (
-              <div className="flex gap-4 mt-4">
-                <button className="flex cursor-pointer justify-center items-center bg-cyan-700 w-full py-2 rounded-xl scale-100 hover:scale-110 transition ease-in-out duration-500" onClick={()=>{
-                  setSelectedPost(String(p.id));
-                  setSelectedChannel(p.channelName||"");
-                  seteditOpen(true);
-                  setSelectedContent(p.generatedContent||"");
-
-                }}>
-                  <Pencil className="mr-2" />
-                  <span className='text-lg font-md'>Edit</span>
-                </button>
-                <button onClick={()=>{setSelectedPost(String(p.id));setDeletePost(true)}} className="flex justify-center items-center  bg-red-600 w-full py-2 rounded-xl cursor-pointer scale-100 hover:scale-110 transition ease-in-out duration-500">
-                  <Trash2 className="mr-2" />
-                   <span className='text-lg font-md'>Delete</span>
-                </button>
-                {/* <button className="flex justify-center items-center bg-red-600 px-2 py-2 rounded-xl cursor-pointer scale-100 hover:scale-110 transition ease-in-out duration-500">
-                  <Trash2 />
-                </button> */}
-              </div>
-            )}
-          </div>
-
         </div>
       </div>
-    );
-  })}
-</div>
 
-
-                    </div>
-                )}
-
-
-
-        </div>
-     {editOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
-          onClick={() => seteditOpen(false)}
-        />
+      {/* Modals & Drawers */}
+      {editOpen && (
+        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md" onClick={() => seteditOpen(false)} />
       )}
-
-  {editOpen && (
-
-        <div className="fixed inset-y-0 right-0 z-50 w-[420px] ">
-          <Drawer open={editOpen} onSaved={fetchPosts} initialContent={selectedContent} initialChannel={selectedChannel} post={selectedPost} onClose={()=>{
-            seteditOpen(false)
-            setSelectedPost("")
-          }} />
-
+      {editOpen && (
+        <div className="fixed inset-y-0 right-0 z-50 w-[420px]">
+          <Drawer open={editOpen} onSaved={fetchPosts} initialContent={selectedContent} initialChannel={selectedChannel} post={selectedPost} onClose={() => { seteditOpen(false); setSelectedPost(""); }} />
         </div>
-  )}
-
-  {deletePost && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
-
-        />
       )}
- {deletePost && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div className="w-[420px] bg-gray-900 p-6 rounded-xl">
-      <Delete post={selectedPost} onSaved={fetchPosts} onClose={()=>{
-                    setDeletePost(false);
-                    setSelectedPost("")
-                  }}  />
-    </div>
-  </div>
-)}
-
-
-        </>
-    )
+      {deletePost && (
+        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md" />
+      )}
+      {deletePost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="w-[420px] bg-slate-900 border border-white/10 p-6 rounded-2xl shadow-2xl">
+            <Delete post={selectedPost} onSaved={fetchPosts} onClose={() => { setDeletePost(false); setSelectedPost(""); }} />
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

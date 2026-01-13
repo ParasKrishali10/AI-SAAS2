@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import { useUserInfo } from "@/lib/userInfo";
 import { div } from "framer-motion/client";
 import { MainLoader } from "@/components/MainLoader";
+import FloatingSidebar from "@/components/Sidebar";
+import Truck from "@/components/Truck";
 
 interface SchedulingModalProps{
   userId:string
@@ -181,7 +183,7 @@ useEffect(()=>{
   }
 
   const notifyChannel=()=>{
-    toast("Wait for 3 sec while we fetch your channels")
+    toast("Wait for 5 sec while we fetch your channels")
   }
 
   // const handleSync=async()=>{
@@ -194,238 +196,143 @@ useEffect(()=>{
   //   }
   // }
 
-  return (
-    <div className="relative min-h-screen text-white">
-      {loading && (
-        <div className=" min-h-screen flex justify-center items-center">
-        <MainLoader
-  title="Fetching"
-  words={["Content", "Images", "Content", "Images","Content","Images" ]}
-/>
+return (
 
-        </div>
-      )}
-    {scheduling && (
-        <div className=" min-h-screen flex justify-center items-center">
-        <MainLoader
-  title="Fetching"
-  words={["Permissions", "Content", "Time", "Date","Server","channel" ]}
-/>
+    <div className="flex min-h-screen bg-[#020617] text-white w-full overflow-hidden">
 
-        </div>
-      )}
-      {!scheduling &&!loading && (
-        <div>
-            <div className="absolute inset-0 -z-20">
-            <ParticleBackground />
-            </div>
-            <div className="absolute inset-0 flex justify-center items-start -z-10 pointer-events-none">
-        <div
-          className="mt-32 w-[700px] h-[700px]
-            bg-[radial-gradient(circle_at_40%_40%,rgba(0,200,255,0.30),transparent_60%),
-            radial-gradient(circle_at_70%_70%,rgba(170,80,255,0.25),transparent_60%),
-            radial-gradient(circle_at_30%_80%,rgba(255,0,230,0.20),transparent_60%)]
-            blur-[140px]"
-        ></div>
+{(loading || scheduling) &&(
+
+      <div className="w-20 flex-shrink-0 sticky top-0 h-screen z-50">
+        <FloatingSidebar />
       </div>
-       <div className="relative flex flex-col max-w-3xl mx-auto pt-16 px-6 pb-24">
+)}
 
-        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-tr from-cyan-400 via-purple-500 to-cyan-300">
-          AI Post Creator
-        </h1>
 
-        <div className="mt-6 text-xl font-bold flex gap-2 items-center">
-          <Sparkles className="text-cyan-400" />
-          <span>Generated Content</span>
+      <div className="flex-1 relative min-w-0">
+
+        {(loading || scheduling) && (
+          <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50 backdrop-blur-md">
+            <Truck/>
+          </div>
+        )}
+        {(!loading && !scheduling) &&(
+          <div>
+        <div className="absolute inset-0 -z-20">
+          <ParticleBackground />
+        </div>
+        <div className="absolute inset-0 flex justify-center items-start -z-10 pointer-events-none">
+          <div className="mt-32 w-[800px] h-[800px] bg-[radial-gradient(circle_at_50%_50%,rgba(0,200,255,0.15),transparent_60%)] blur-[140px]"></div>
         </div>
 
-        <div className="mt-4 rounded-xl p-6 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-cyan-500/20">
+        <div className="max-w-6xl mx-auto px-10">
 
-
-          {images.length > 0 && (
-            <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
-              {images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt={`Generated image ${i}`}
-                  className="w-48 h-48 object-cover rounded-xl shadow-lg"
-                />
-              ))}
-            </div>
-          )}
-
-          <textarea
-            value={content}
-            onChange={(e) => setContents(e.target.value)}
-            className="text-lg w-full h-64 p-4 rounded-lg resize-none bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-          />
-        </div>
-
-        <div className="mt-8 rounded-xl p-6 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-purple-500/20">
-
-
-          <div className="grid grid-cols-2 justify-between items-center">
-            <div >
-          <label htmlFor="" className="font-bold text-xl">Server</label>
-          <div className="mt-3">
-<select
-  id="server"
-  value={selectedServer}
-  onChange={(e) => {setSelectedServer(e.target.value);
-    notifyChannel();
-  }}
-  className="
-    mt-2 w-full p-3
-    rounded-lg
-    transition-all duration-300
-    bg-white/5 border border-white/10
-    focus:outline-none focus:ring-2 focus:ring-cyan-500
-    shadow-xl shadow-indigo-600/30
-    text-white placeholder-gray-400
-  "
->
-  <option value="" className="bg-black">Select a Server</option>
-  {servers.map((server) => (
-    <option key={server.id} value={server.guildId} className="bg-black">
-      {server.guildName}
-    </option>
-  ))}
-</select>
-
-          </div>
-
-            </div>
-            <div >
-          <label htmlFor="" className="font-bold text-xl ml-3">Channels</label>
-          <div className="mt-3">
- <select
-    id="channel"
-    disabled={!selectedServer}
-    value={selectedChannel}
-    onChange={(e) => setSelectedChannel(e.target.value)}
-    className="
-      mt-2 w-full p-3 ml-2
-      rounded-lg
-      transition-all duration-300
-      bg-white/5 border border-white/10
-      focus:outline-none focus:ring-2 focus:ring-cyan-500
-      shadow-xl shadow-indigo-600/30
-      text-white
-    "
-  >
-    <option value="" className="bg-black">Select a channel</option>
-    {channels.map((ch) => (
-      <option key={ch.id} value={ch.id} className="bg-black">
-        {ch.name}
-      </option>
-    ))}
-  </select>
-          </div>
-
-            </div>
-{botMissing && selectedServer && (
-    <div className="col-span-2 flex justify-center mt-6">
-      <a
- href={`https://discord.com/oauth2/authorize
-    ?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}
-    &scope=bot
-    &permissions=68608
-    &guild_id=${selectedServer}
-    &disable_guild_select=true
-    &redirect_uri=${encodeURIComponent(redirectUrl)}
-    &response_type=code
-    &state=${encodeURIComponent(state)}
-  `.replace(/\s+/g, "")}
-        className="bg-indigo-600 px-6 py-3 rounded-md text-white text-lg font-semibold"
-      >
-        Add Bot To Server
-      </a>
-    </div>
-  )}
-
-
-            </div>
-            {!botMissing && selectedServer && (
-              <div>
-<div className="grid grid-cols-2 justify-between items-center mt-6">
-            <div >
-          <label htmlFor="" className="font-bold text-xl mt-4">Date </label>
-          <div className="mt-3">
-
-          <input
-  type="date"
-
-
-  className="
-    mt-2 w-full p-3
-    rounded-lg
-    transition-all duration-300
-    bg-white/5 border border-white/10
-    focus:outline-none focus:ring-2 focus:ring-cyan-500
-    shadow-xl shadow-indigo-600/30
-    text-white placeholder-gray-400
-  "
-  onChange={(e) => setSelectedDate(e.target.value)}
-/>
-
-          </div>
-
-          </div>
-            <div >
-          <label htmlFor="" className="font-bold text-xl mt-4 ml-2">Time</label>
-          <div className="mt-3">
-
-          <input
-  type="time"
-
-    onChange={(e) => setSelectedTime(e.target.value)}
-  className="
-    mt-2 w-full p-3 ml-2
-    rounded-lg
-    transition-all duration-300
-    bg-white/5 border border-white/10
-    focus:outline-none focus:ring-2 focus:ring-cyan-500
-    shadow-xl shadow-indigo-600/30
-    text-white placeholder-gray-400
-  "
-/>
-
-          </div>
-
-          </div>
-
-            </div>
+          <div className="pt-10 pb-8">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold">
+                <span>Main Dashboard</span>
+                <span className="text-slate-800">/</span>
+                <span className="text-blue-500">Post Generated</span>
               </div>
-            ) }
-
-
-            <div className="flex justify-center items-center mt-6">
-           <button className="mt-6 text-white  bg-gradient-to-br  from-[#00d4ff] to-[#a855f7] p-4 text-xl text-black font-medium rounded-md cursor-pointer flex gap-2 items-center justify-center " onClick={handleSchedule}>
-                             <SendHorizontal/>
-                          <span>Schedule Post</span>
-                    </button>
-
+              <h1 className="text-5xl font-extrabold text-white tracking-tight">
+                Generated <span className="text-blue-600">Content</span>
+              </h1>
+              <p className="text-slate-500 text-md font-medium mt-1">
+                Schedule your AI-generated Discord post.
+              </p>
             </div>
-            {/* <div className="flex justify-center items-center mt-6">
-           <button className="mt-6 text-white  bb-cyan-800 p-4 text-xl text-black font-medium rounded-md cursor-pointer flex gap-2 items-center justify-center " onClick={handleSync}>
-                             <SendHorizontal/>
-                          <span>SYNC channels</span>
-                    </button>
+          </div>
 
-            </div> */}
+          <div className="flex flex-col gap-8 pb-24">
 
+            <section>
+              <div className="text-xl font-bold flex gap-2 items-center mb-4">
+                <Sparkles className="text-cyan-400" />
+                <span>Generated Content</span>
+              </div>
+              <div className="rounded-xl p-6 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-cyan-500/10">
+                {images.length > 0 && (
+                  <div className="flex flex-wrap justify-center gap-4 mb-6">
+                    {images.map((img, i) => (
+                      <img key={i} src={img} alt="" className="w-64 h-64 object-cover rounded-xl shadow-lg border border-white/5" />
+                    ))}
+                  </div>
+                )}
+                <textarea
+                  value={contents===""?content:contents}
+                  onChange={(e) => {setContents(e.target.value)}}
+                  className="text-lg w-full h-80 p-5 rounded-lg resize-none bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+                />
+              </div>
+            </section>
 
+            <section className="rounded-xl p-8 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-purple-500/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-3">
+                  <label className="font-bold text-lg">Server</label>
+                  <select
+                    value={selectedServer}
+                    onChange={(e) => {setSelectedServer(e.target.value); notifyChannel();}}
+                    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:ring-2 focus:ring-cyan-500 text-white"
+                  >
+                    <option value="" className="bg-slate-900">Select a Server</option>
+                    {servers.map((s) => (
+                      <option key={s.id} value={s.guildId} className="bg-slate-900">{s.guildName}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <label className="font-bold text-lg">Channel</label>
+                  <select
+                    disabled={!selectedServer}
+                    value={selectedChannel}
+                    onChange={(e) => setSelectedChannel(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:ring-2 focus:ring-cyan-500 text-white disabled:opacity-50"
+                  >
+                    <option value="" className="bg-slate-900">Select a Channel</option>
+                    {channels.map((ch) => (
+                      <option key={ch.id} value={ch.id} className="bg-slate-900">{ch.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {botMissing && selectedServer && (
+                  <div className="md:col-span-2 flex justify-center pt-4">
+                    <a href={`https://discord.com/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&scope=bot&permissions=68608&guild_id=${selectedServer}&disable_guild_select=true&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${encodeURIComponent(state)}`}
+                       className="bg-indigo-600 px-8 py-3 rounded-lg text-white font-bold hover:bg-indigo-700 transition-colors">
+                      Add Bot To Server
+                    </a>
+                  </div>
+                )}
+
+                {!botMissing && selectedServer && (
+                  <>
+                    <div className="flex flex-col gap-3">
+                      <label className="font-bold text-lg">Date</label>
+                      <input type="date" className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-white" onChange={(e) => setSelectedDate(e.target.value)} />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <label className="font-bold text-lg">Time</label>
+                      <input type="time" className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-white" onChange={(e) => setSelectedTime(e.target.value)} />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="flex justify-center mt-10">
+                <button onClick={handleSchedule} className="flex items-center gap-3 bg-gradient-to-r from-cyan-400 to-purple-500 px-12 py-4 rounded-xl font-bold text-xl hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-purple-500/20 hover:cursor-pointer">
+                  <SendHorizontal />
+                  <span>Schedule Post</span>
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
+
+          </div>
+        )}
       </div>
-
-        </div>
-      )}
-
-
-
-
-
     </div>
   );
+
 }

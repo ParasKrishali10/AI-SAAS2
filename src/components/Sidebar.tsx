@@ -2,23 +2,25 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, BarChart3, CalendarDays, PenTool, Settings, Menu, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useUserInfo } from '@/lib/userInfo';
+import { useRouter,usePathname } from 'next/navigation';
+import { useUserInfo } from '@/lib/userInfo';false
 const FloatingSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const userId=useUserInfo((s)=>s.userId)
   const router=useRouter()
+  const pathname=usePathname()
   const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard size={18} />, active: false },
-    { name: 'Analytics', icon: <BarChart3 size={18} />, active: true },
-    { name: 'Scheduled Posts', icon: <CalendarDays size={18} />, active: false },
-    { name: 'Post Generation', icon: <PenTool size={18} />, active: false },
-    { name: 'Settings', icon: <Settings size={18} />, active: false },
+    { name: 'Dashboard', icon: <LayoutDashboard size={18} />, path:'/dashboard'  },
+    { name: 'Analytics', icon: <BarChart3 size={18} />, path: '/analytics' },
+    { name: 'Scheduled Posts', icon: <CalendarDays size={18} />,path: '/scheduled' },
+    { name: 'Post Generation', icon: <PenTool size={18} />, path: '/postCreator'  },
+    { name: 'Settings', icon: <Settings size={18} />, path: '/settings' },
   ];
 
   const handleRedirect=async(name:string)=>
   {
       if(name==='Dashboard'){
+
         router.push(`/dashboard?userId=${userId}`)
         return
       }else if(name==='Analytics'){
@@ -43,7 +45,7 @@ const FloatingSidebar = () => {
 
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-8 left-8 z-50 p-2 text-slate-400 hover:text-white transition-colors"
+        className="fixed top-8 left-2 z-50 p-2 text-slate-400 hover:text-white transition-colors"
       >
         <Menu size={28} />
       </button>
@@ -78,21 +80,26 @@ const FloatingSidebar = () => {
 
 
               <nav className="space-y-1">
-                {menuItems.map((item) => (
-                  <button onClick={()=>handleRedirect(item.name)}
-                    key={item.name}
-                    className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group
-                      ${item.active
-                        ? 'bg-blue-600/30 text-blue-100 shadow-inner border border-white/5'
-                        : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                      }`}
-                  >
-                    <span className={`${item.active ? 'text-blue-400' : 'text-slate-500 group-hover:text-blue-400'}`}>
-                      {item.icon}
-                    </span>
-                    <span className="text-sm font-medium tracking-tight">{item.name}</span>
-                  </button>
-                ))}
+             {menuItems.map((item) => {
+  const isActive = pathname.startsWith(item.path);
+
+  return (
+    <button
+      key={item.name}
+      onClick={() => handleRedirect(item.name)}
+      className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group
+        ${isActive
+          ? 'bg-blue-600/30 text-blue-100 shadow-inner border border-white/5'
+          : 'text-slate-400 hover:bg-white/5 hover:text-white'
+        }`}
+    >
+      <span className={`${isActive ? 'text-blue-400' : 'text-slate-500 group-hover:text-blue-400'}`}>
+        {item.icon}
+      </span>
+      <span className="text-sm font-medium tracking-tight">{item.name}</span>
+    </button>
+  );
+})}
               </nav>
             </motion.div>
           </>

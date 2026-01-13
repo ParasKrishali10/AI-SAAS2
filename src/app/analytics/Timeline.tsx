@@ -169,14 +169,13 @@ useEffect(() => {
   }
 return (
     <div className="flex min-h-screen bg-[#020617] w-full">
-      {/* SIDEBAR AREA - Integrated directly */}
+
       <div className="w-20 flex-shrink-0 sticky top-0 h-screen z-50">
         <FloatingSidebar />
       </div>
 
-      {/* MAIN CONTENT AREA */}
       <div className="flex-1 min-w-0 pr-6 relative overflow-x-hidden">
-        {/* Background Decorative Glow */}
+
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 blur-[140px] -z-10 pointer-events-none" />
 
         {loading && (
@@ -187,7 +186,6 @@ return (
 
         {!loading && (
           <>
-            {/* Header Section */}
             <div className="w-full pt-10 pb-8 relative">
               <div className="pl-12 pr-6 flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold">
@@ -219,9 +217,8 @@ return (
               </div>
             </div>
 
-            {/* Timeline List Section */}
             <div className="w-full relative pl-8 pr-4 py-10">
-              {/* Main Vertical Line */}
+
               <div className="absolute left-6 top-0 h-full w-[2px] bg-gradient-to-b from-cyan-400 via-indigo-500 to-transparent shadow-[0_0_16px_rgba(34,211,238,0.4)]" />
 
               <AnimatePresence>
@@ -240,18 +237,14 @@ return (
                         transition={{ type: "spring", stiffness: 120, damping: 20 }}
                         className="relative mb-8 pl-12"
                       >
-                        {/* The Glowing Dot */}
-                        <div className="absolute left-6 top-7 h-3 w-3 -translate-x-1/2 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,1)] z-20 animate-pulse" />
 
-                        {/* GLASSPHORISM CARD */}
+                        <div className="absolute left-6 top-7 h-3 w-3 -translate-x-1/2 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,1)] z-20 animate-pulse" />
                         <div className="w-full group relative overflow-hidden rounded-2xl bg-white/[0.03] border border-white/10 px-6 py-5 shadow-2xl backdrop-blur-xl transition-all duration-500 hover:bg-white/[0.06] hover:scale-[1.01] hover:border-white/20">
 
-                          {/* 1. MOVING BORDER (Trace Effect) */}
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                             <div className="absolute inset-0 border border-transparent [border-image:linear-gradient(to_right,transparent,theme(colors.cyan.400),theme(colors.indigo.500),transparent)1] rounded-2xl" />
                           </div>
 
-                          {/* 2. SHINE EFFECT */}
                           <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
                             <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shine-on-hover" />
                           </div>
