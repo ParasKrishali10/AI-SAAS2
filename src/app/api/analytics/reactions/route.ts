@@ -71,6 +71,7 @@ const { messageId, type,emoji } = body
            "notification",
            {message: `Someone reacted ${emoji} on your post in ${serverName?.guildName}`}
          )
+
         }
        if(type==="REACTION_DELETE"){
   await pusherServer.trigger(
@@ -78,6 +79,7 @@ const { messageId, type,emoji } = body
     "notification",
     {message: `Someone removed a reaction on your post in ${serverName?.guildName}`}
   )
+
 }
 
     return NextResponse.json(notifications)

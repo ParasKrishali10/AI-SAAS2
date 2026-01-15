@@ -23,7 +23,7 @@ export function AnimatedReactions({ messageId ,onClose}: Props) {
   const [discordMessageIds,setDiscordMessageId]=useState<string|null>(null)
   const visibleReactions = reactions.slice(0, MAX_VISIBLE)
   const hiddenReactions = reactions.slice(MAX_VISIBLE)
-// console.log("cummm")
+
   const fetchAnalytics = useCallback(async () => {
     // console.log(messageId)
     const resi = await axios.get(`/api/analytics/?messageId=${messageId}`)

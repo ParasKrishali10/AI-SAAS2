@@ -14,7 +14,7 @@ const FloatingSidebar = () => {
     { name: 'Analytics', icon: <BarChart3 size={18} />, path: '/analytics' },
     { name: 'Scheduled Posts', icon: <CalendarDays size={18} />,path: '/scheduled' },
     { name: 'Post Generation', icon: <PenTool size={18} />, path: '/postCreator'  },
-    { name: 'Settings', icon: <Settings size={18} />, path: '/settings' },
+
   ];
 
   const handleRedirect=async(name:string)=>
@@ -35,7 +35,6 @@ const FloatingSidebar = () => {
          router.push("/postCreator")
         return
       }else{
-        router.push("/setting")
         return
       }
   }

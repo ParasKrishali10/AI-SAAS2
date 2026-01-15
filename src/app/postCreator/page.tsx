@@ -8,6 +8,7 @@ import ParticleBackground from "@/components/ParticleBackground";
 import { usePostStore } from "@/lib/postStore";
 import FloatingSidebar from "@/components/Sidebar";
 import Truck from "@/components/Truck";
+import { MainLoader } from "@/components/MainLoader";
 const PLACEHOLDER_EXAMPLES = [
   "Write about the latest Discord features and updates...",
   "Create a community announcement for your server...",
@@ -51,6 +52,16 @@ export default function CreatePost(){
     const [selectedLength,setSelectedLength]=useState("Short")
     const [loading,setLoading]=useState(false)
     const router=useRouter()
+
+    const LOADING_MESSAGES = [
+  "Connecting to AI Neural Network...",
+  "Analyzing your tone and style...",
+  "Drafting the content...",
+  "Polishing the grammar...",
+  "Generating custom visuals...",
+  "Finalizing your masterpiece...",
+];
+
     const handleFocus1 = () => {
     setIsFocused1(true);
   };
@@ -107,8 +118,6 @@ router.push("/postGenerated");
         console.log(error)
         toast.error("Failed to fetch the posts")
         return
-    }finally{
-        setGeneration(false)
     }
 
   }
@@ -142,7 +151,6 @@ setContent(post.content)
 setDesription(desc)
 setImages(post.imageUrls)
 router.push("/postGenerated");
-setGeneration(false)
     }catch(error:any)
     {
         console.log(error)
@@ -166,7 +174,7 @@ setGeneration(false)
     <div className="relative min-h-screen text-white">
  {(generation) && (
           <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50 backdrop-blur-md">
-            <Truck/>
+            <MainLoader words={LOADING_MESSAGES}/>
           </div>
         )}
         {!generation && (

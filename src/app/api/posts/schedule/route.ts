@@ -42,16 +42,13 @@ storedUrls = await Promise.all(
 
       console.log(post.id)
 
-      // const mess=await prisma.messageReaction.create({
-      //   data:{
-      //     messageId:post.id,
-      //     channelId,
-      //     guildId:serverId,
-      //     emoji:"TOTAL",
-      //     count:0
-      //   }
-      // })
-      // console.log(mess)
+      await prisma.notifications.create({
+                  data:{
+                      userId:post.userId,
+                      type:'SCHEDULED',
+                      message:`Your post has been scheduled for ${new Date(scheduledFor).toLocaleString()}.`
+                  }
+                })
 
       return NextResponse.json({ success: true, post });
 

@@ -200,7 +200,7 @@ return (
 
     <div className="flex min-h-screen bg-[#020617] text-white w-full overflow-hidden">
 
-{(loading || scheduling) &&(
+{(!loading || scheduling) &&(
 
       <div className="w-20 flex-shrink-0 sticky top-0 h-screen z-50">
         <FloatingSidebar />

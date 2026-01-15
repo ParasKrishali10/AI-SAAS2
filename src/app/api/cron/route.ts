@@ -52,6 +52,15 @@ export async function GET(request:Request)
             }
           })
 
+          await prisma.notifications.create({
+            data:{
+                userId:post.userId,
+                type:'POST_PUBLISHED',
+                message:`Your scheduled post has been published to channel ${post.channelId}.`
+            }
+          })
+
+
          await pusherServer.trigger(
             `user-${post.userId}`,
             "notification",
