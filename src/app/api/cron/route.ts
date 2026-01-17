@@ -52,11 +52,18 @@ export async function GET(request:Request)
             }
           })
 
+          const server=await prisma.connectedServer.findFirst({
+            where:{
+              guildId:post.guildId,
+              userId:post.userId
+            }
+          })
+
           await prisma.notifications.create({
             data:{
                 userId:post.userId,
                 type:'POST_PUBLISHED',
-                message:`Your scheduled post has been published to channel ${post.channelId}.`
+                message:`Your scheduled post has been published to channel ${server?.guildName}.`
             }
           })
 
