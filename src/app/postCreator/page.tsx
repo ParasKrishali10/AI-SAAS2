@@ -53,13 +53,13 @@ export default function CreatePost(){
     const [loading,setLoading]=useState(false)
     const router=useRouter()
 
-    const LOADING_MESSAGES = [
-  "Connecting to AI Neural Network...",
-  "Analyzing your tone and style...",
-  "Drafting the content...",
-  "Polishing the grammar...",
-  "Generating custom visuals...",
-  "Finalizing your masterpiece...",
+   const LOADING_MESSAGES = [
+  "Establishing connection...",
+  "Analyzing tone parameters...",
+  "Synthesizing text patterns...",
+  "Optimizing grammar engine...",
+  "Rendering visual assets...",
+  "Finalizing data stream...",
 ];
 
     const handleFocus1 = () => {
@@ -110,13 +110,14 @@ const setImages = usePostStore.getState().setImages;
 setContent(post.content)
 setDesription(desc)
 setImages(post.imageUrls)
-
+setGeneration(false)
 router.push("/postGenerated");
 
     }catch(error:any)
     {
         console.log(error)
         toast.error("Failed to fetch the posts")
+        setGeneration(false)
         return
     }
 
@@ -150,14 +151,14 @@ const setImages = usePostStore.getState().setImages;
 setContent(post.content)
 setDesription(desc)
 setImages(post.imageUrls)
+setGeneration(false)
 router.push("/postGenerated");
     }catch(error:any)
     {
         console.log(error)
         toast.error("Failed to fetch the posts")
-        return
-    }finally{
         setGeneration(false)
+        return
     }
 
   }
@@ -174,7 +175,7 @@ router.push("/postGenerated");
     <div className="relative min-h-screen text-white">
  {(generation) && (
           <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50 backdrop-blur-md">
-            <MainLoader words={LOADING_MESSAGES}/>
+            <MainLoader title="AI PROCESSING" words={LOADING_MESSAGES}/>
           </div>
         )}
         {!generation && (

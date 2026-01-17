@@ -93,6 +93,24 @@ export default function DashboardPage() {
   ]
   const growthRate: number = analyticsData?.growthRate ?? 0
 
+  const handleRedirection = (label: string) => {
+    return () => {
+      switch (label) {
+        case "Create Post":
+          router.push('/postCreator')
+          break
+        case "Scheduled":
+          router.push('/scheduled')
+          break
+        case "Analytics":
+          router.push('/analytics')
+          break
+        default:
+          break
+      }
+    }
+  }
+
   return (
     <div className="flex h-screen bg-slate-950 text-slate-200 selection:bg-cyan-500/30 selection:text-cyan-200 font-sans overflow-hidden min-h-screen">
 
@@ -130,7 +148,7 @@ export default function DashboardPage() {
             { icon: CalendarClock, label: "Scheduled" },
             { icon: BarChart3, label: "Analytics" },
           ].map((item, idx) => (
-            <button key={idx} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group">
+            <button onClick={handleRedirection(item.label)} key={idx} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group">
               <item.icon className="h-5 w-5 group-hover:text-cyan-400 transition-colors" />
               <span>{item.label}</span>
             </button>
@@ -316,26 +334,7 @@ export default function DashboardPage() {
 
        </div>
     )}
-                    {!postsLoading && top.length === 0 && (
-       <div className="flex-1 flex flex-col items-center justify-center text-center py-10">
-          <div className="relative mb-6 group cursor-default">
 
-             <div className="absolute inset-0 bg-cyan-500/20 rounded-full animate-ping opacity-75"></div>
-
-             <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition-all duration-500"></div>
-
-             <div className="relative h-16 w-16 bg-slate-900 rounded-full flex items-center justify-center border border-cyan-500/50 shadow-[0_0_15px_rgba(34,211,238,0.3)] z-10">
-                 <Bot className="h-8 w-8 text-cyan-400 animate-[pulse_3s_ease-in-out_infinite]" />
-
-                 <div className="absolute top-0 right-0 h-3 w-3 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
-             </div>
-          </div>
-          <h4 className="text-slate-300 font-medium mb-1 text-lg">No Transmissions Found</h4>
-          <p className="text-xs text-slate-500 font-mono max-w-[240px] leading-relaxed">
-             AI Systems are active and waiting. <br/> No reactions have been added yet 😔.
-          </p>
-       </div>
-    )}
                     {!postsLoading && top.map((p, index) => (
                       <div key={index} className="group flex items-center justify-between p-4 rounded-xl bg-slate-950/50 border border-white/5 hover:border-purple-500/30 hover:bg-slate-900/80 transition-all duration-300 cursor-pointer">
                         <div className="flex items-center gap-4 min-w-0 flex-1">
