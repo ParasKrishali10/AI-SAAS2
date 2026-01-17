@@ -9,7 +9,8 @@ import AnalyticsChart from '@/components/AnalyticsChart';
 import { useQuery } from '@tanstack/react-query';
 import { AnalyticsChartSkeleton } from '@/components/AnalyticsChartSkelton';
 import Topbar from '@/components/Topbar';
-
+import FloatingSidebar from '@/components/Sidebar';
+import Truck from '@/components/Truck';
 interface Recent { guildName: String; channelName: String; generatedContent: String }
 interface Upcoming { guildName: String; channelName: String; generatedContent: String; scheduledFor: Date }
 interface Posts { id: String; title: String; content: String; createdAt: String }
@@ -53,7 +54,7 @@ export default function DashboardPage() {
     return res.data
   }
 
-  const { data: userData } = useQuery({
+  const { data: userData, isLoading:userLoading } = useQuery({
     queryKey: ['user', userIds],
     queryFn: () => fetchUser(userIds!),
     enabled: !!userIds
@@ -112,13 +113,23 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-200 selection:bg-cyan-500/30 selection:text-cyan-200 font-sans overflow-hidden min-h-screen">
+<>
+{userLoading && (
+<div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-[60]">
+      <Truck />
+    </div>
+)}
+   {!userLoading && ( <div className="flex h-screen bg-slate-950 text-slate-200 selection:bg-cyan-500/30 selection:text-cyan-200 font-sans overflow-hidden min-h-screen">
 
+        <div>
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-900/10 blur-[150px]"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/10 blur-[150px]"></div>
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
       </div>
+
+        </div>
+
 
       <aside className="relative z-20 w-64 flex-shrink-0 border-r border-white/5 bg-slate-950/50 backdrop-blur-xl flex flex-col hidden md:flex">
 
@@ -419,6 +430,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-    </div>
+    </div> )}
+</>
   );
 }

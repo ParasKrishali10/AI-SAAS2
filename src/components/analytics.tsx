@@ -11,13 +11,11 @@ export default function Analytics() {
   return (
     <section ref={ref} className="py-32 px-4 relative overflow-hidden bg-slate-950">
 
-      {/* Background Ambient Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-900/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         <div className={`grid lg:grid-cols-2 gap-16 items-center ${isInView ? "animate-slide-in-left" : "opacity-0"}`}>
 
-          {/* --- LEFT SIDE: TEXT CONTENT --- */}
           <div>
 
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6">
@@ -36,7 +34,6 @@ export default function Analytics() {
               Stop guessing what works. Track engagement, member growth, and reaction rates in real-time. Get actionable insights to optimize your community strategy.
             </p>
 
-            {/* Feature List */}
             <div className="grid grid-cols-1 gap-4">
               {[
                 { text: "Live Engagement Metrics", icon: Zap, color: "text-yellow-400" },
@@ -54,10 +51,8 @@ export default function Analytics() {
             </div>
           </div>
 
-          {/* --- RIGHT SIDE: VISUAL (Mock Dashboard) --- */}
           <div className={`relative ${isInView ? "animate-float" : ""}`}>
 
-            {/* Background Gradient Blob */}
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-cyan-500/20 rounded-3xl blur-3xl transform rotate-3 scale-95" />
 
                 <Image src="/analytics.png" alt="AI Interface" width={0} height={0} sizes="100vw" className="w-full h-autorelative z-10 rounded-xl border border-white/10 shadow-2xl" />

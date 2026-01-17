@@ -152,7 +152,7 @@ export default function Hero() {
             <div className="flex flex-wrap justify-center gap-5 mt-10">
                 <button
                     onClick={handleConnectDiscord}
-                    className="group relative px-8 py-4 rounded-xl bg-slate-950 text-white font-bold text-lg shadow-[0_0_20px_-5px_rgba(34,211,238,0.3)] hover:shadow-[0_0_40px_-5px_rgba(34,211,238,0.5)] transition-all duration-300 overflow-hidden"
+                    className="group relative px-8 py-4 rounded-xl bg-slate-950 text-white cursor-pointer font-bold text-lg shadow-[0_0_20px_-5px_rgba(34,211,238,0.3)] hover:shadow-[0_0_40px_-5px_rgba(34,211,238,0.5)] transition-all duration-300 overflow-hidden"
                 >
                     <div className="absolute inset-0 rounded-xl p-[2px] bg-gradient-to-r from-cyan-500 via-purple-500 to-cyan-500 opacity-70 group-hover:opacity-100 animate-gradientMove">
                        <div className="bg-slate-950 w-full h-full rounded-[10px]"></div>
