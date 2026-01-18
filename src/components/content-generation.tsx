@@ -39,7 +39,7 @@ export default function ContentGeneration() {
               {[
                 { text: "Generate posts in seconds", sub: "No more writer's block" },
                 { text: "Customize tone and style", sub: "From professional to meme-lord" },
-                { text: "Multi-language support", sub: "Reach a global audience" }
+                { text: "Generate variety of images", sub: "Reach a global audience" }
               ].map((item, i) => (
                 <div key={i} className="group flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300">
                   <div className="mt-1 bg-cyan-500/10 p-2 rounded-lg text-cyan-400 group-hover:text-cyan-300 group-hover:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all">
