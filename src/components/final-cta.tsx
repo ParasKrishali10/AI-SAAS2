@@ -4,7 +4,6 @@ import { Rocket, Sparkles, CheckCircle2 } from "lucide-react"
 
 export default function FinalCTA() {
   const handleConnectDiscord = () => {
-    // Add your auth logic here
     const discordAuthUrl = new URL("https://discord.com/oauth2/authorize");
     discordAuthUrl.searchParams.append("client_id", process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!);
     discordAuthUrl.searchParams.append("redirect_uri", process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!);

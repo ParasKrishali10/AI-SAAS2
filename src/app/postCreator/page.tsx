@@ -90,7 +90,6 @@ export default function CreatePost(){
 
     setGeneration(true)
     try{
-        // toast.success("Wait while we are generating your content.....")
         const response=await axios.post("/api/posts/generate",{
             description:desc.trim(),
             generatedImages:generatedImages && prompts.trim().length > 0,
@@ -128,12 +127,20 @@ router.push("/postGenerated");
       toast.error("Please write prompt for image generation")
       return
     }
+     if(!desc.trim())
+    {
+        toast.error("Please enter the description")
+        return ;
+    }
+    if (generatedImages && !prompts.trim()) {
+   toast.error("Please enter an image prompt or disable image generation");
+   return;
+}
     try{
-      // toast.success("Wait while we are generating your content...")
       setGeneration(true)
         const response=await axios.post("/api/posts/generate",{
             description:desc.trim(),
-            generatedImages:generatedImages,
+            generatedImages:true,
             tone:selectedTone,
             length:selectedLength,
             prompts
@@ -156,7 +163,7 @@ router.push("/postGenerated");
     }catch(error:any)
     {
         console.log(error)
-        toast.error("Failed to fetch the posts")
+        toast.error("Failed to  posts")
         setGeneration(false)
         return
     }

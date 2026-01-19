@@ -12,7 +12,6 @@ export default function ParticleBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Set canvas size
     const setCanvasSize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
@@ -24,7 +23,6 @@ export default function ParticleBackground() {
     const animate = () => {
       time += 0.005
 
-      // Clear canvas with slight trail effect for glow
       ctx.fillStyle = "rgba(10, 14, 39, 0.05)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -32,13 +30,11 @@ export default function ParticleBackground() {
       const centerY = canvas.height / 2
       const scale = Math.min(canvas.width, canvas.height) * 0.25
 
-      // Draw first energy ribbon (Cyan)
       ctx.strokeStyle = "rgba(0, 212, 255, 0.8)"
       ctx.lineWidth = 8
       ctx.lineCap = "round"
       ctx.lineJoin = "round"
 
-      // Create glow effect for first ribbon
       ctx.shadowColor = "rgba(0, 212, 255, 0.6)"
       ctx.shadowBlur = 30
 
@@ -53,7 +49,6 @@ export default function ParticleBackground() {
       }
       ctx.stroke()
 
-      // Draw second energy ribbon (Magenta)
       ctx.strokeStyle = "rgba(168, 85, 247, 0.8)"
       ctx.shadowColor = "rgba(168, 85, 247, 0.6)"
       ctx.shadowBlur = 30
@@ -76,8 +71,6 @@ export default function ParticleBackground() {
       ctx.stroke()
 
       ctx.shadowColor = "transparent"
-
-      // Draw soft glowing particles
       const particleCount = 40
       for (let i = 0; i < particleCount; i++) {
         const angle = (i / particleCount) * Math.PI * 2
@@ -87,7 +80,6 @@ export default function ParticleBackground() {
 
         const size = Math.sin(time * 0.4 + i * 0.1) * 1.5 + 1.5
 
-        // Alternate particle colors
         const isFirstColor = i % 2 === 0
         ctx.fillStyle = isFirstColor
           ? `rgba(0, 212, 255, ${0.3 + Math.sin(time * 0.2 + i) * 0.3})`
@@ -97,7 +89,6 @@ export default function ParticleBackground() {
         ctx.arc(x, y, size, 0, Math.PI * 2)
         ctx.fill()
 
-        // Add glow to particles
         ctx.fillStyle = isFirstColor
           ? `rgba(0, 212, 255, ${0.1 + Math.sin(time * 0.2 + i) * 0.1})`
           : `rgba(168, 85, 247, ${0.1 + Math.cos(time * 0.2 + i) * 0.1})`

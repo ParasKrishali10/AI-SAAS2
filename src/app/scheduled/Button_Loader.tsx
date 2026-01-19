@@ -180,11 +180,8 @@ useEffect(() => {
 
   return (
     <>
-      {/* MAIN LAYOUT: Flexbox ensures side-by-side alignment */}
       <div className="flex min-h-screen bg-slate-950 selection:bg-cyan-500/30 selection:text-cyan-200">
 
-        {/* 1. SIDEBAR COLUMN */}
-        {/* Sticky keeps it fixed while scrolling, but 'relative' to the flex flow */}
         {!loading && (
 
         <div className="w-20 flex-shrink-0 z-50 relative">
@@ -193,18 +190,11 @@ useEffect(() => {
             </div>
         </div>
         )}
-
-        {/* 2. MAIN CONTENT COLUMN */}
-        {/* flex-1 makes it take all remaining width */}
         <div className="flex-1 min-w-0 relative flex flex-col">
-
-            {/* Background Ambient Glow (Scoped to main content) */}
             <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[120px]"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px]"></div>
             </div>
-
-            {/* Content Wrapper (Above Background) */}
             <div className="relative z-10">
                 {loading && (
                     <div className="min-h-screen flex justify-center items-center backdrop-blur-sm">
@@ -237,7 +227,6 @@ useEffect(() => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* Decorative Badge */}
                                 <div className="hidden md:block pb-2">
                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-cyan-500/20 bg-cyan-950/10 backdrop-blur-md">
                                         <div className="w-1.5 h-1.5 rounded-sm bg-cyan-500 animate-pulse"></div>
@@ -246,8 +235,6 @@ useEffect(() => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* --- SEARCH BAR --- */}
                         <div className="px-5 pt-8">
                             <div className="relative group">
                                 <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
@@ -260,13 +247,11 @@ useEffect(() => {
                                         onChange={(e) => setSearchText(e.target.value)}
                                         type="text"
                                         placeholder="Search query..."
-                                        className="w-full p-4 bg-transparent text-white text-lg focus:outline-none placeholder:text-slate-600 font-light tracking-wide"
+                                        className="w-full p-4 bg-transparent text-white text-lg focus:outline-none placeholder:text-slate-600 font-light tracking-wide rounded-2xl"
                                     />
                                 </div>
                             </div>
                         </div>
-
-                        {/* --- FILTERS --- */}
                         <div className="mt-8 px-5 flex flex-wrap gap-4">
                             {[
                                 { id: 1, label: "All Systems", count: all, filter: "ALL" },
@@ -284,16 +269,14 @@ useEffect(() => {
                                 </button>
                             ))}
                         </div>
-
-                        {/* --- GRID --- */}
                         <div className="mb-10 px-5 mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
                             {finalPost.map((p,index) => {
                                 return (
                                     <div key={index} className="group relative transition-all duration-500 hover:-translate-y-2">
-                                        {/* ... (Keep your existing Card Code exactly the same) ... */}
+
                                         <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                                         <div className="relative h-full flex flex-col rounded-2xl bg-slate-950/90 border border-white/10 backdrop-blur-xl p-6 overflow-hidden shadow-2xl">
-                                             {/* Card Header */}
+
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="relative">
@@ -305,7 +288,6 @@ useEffect(() => {
                                                         <h4 className="text-xs font-mono text-cyan-400 tracking-wider">#{p.channelName}</h4>
                                                     </div>
                                                 </div>
-                                                {/* Status Badges */}
                                                 <div>
                                                     {p.status === "SCHEDULED" && (
                                                     <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
@@ -330,15 +312,11 @@ useEffect(() => {
                                                     )}
                                                 </div>
                                             </div>
-
-                                            {/* Content */}
                                             <div className="mb-4">
                                                 <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5">
                                                     <p className="text-sm text-slate-300 font-light leading-relaxed line-clamp-3">{p.generatedContent}</p>
                                                 </div>
                                             </div>
-
-                                            {/* Image */}
                                             <div className="group/image relative h-48 w-full rounded-xl overflow-hidden border border-white/10 bg-slate-900">
                                                 {p.imageUrls.length > 0 ? (
                                                     <>
@@ -348,12 +326,10 @@ useEffect(() => {
                                                 ) : (
                                                     <div className="flex h-full items-center justify-center flex-col gap-2 text-slate-600">
                                                     <div className="h-10 w-10 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center"><span className="text-xs">IMG</span></div>
-                                                    <span className="text-xs font-mono">NO SIGNAL</span>
+                                                    <span className="text-xs font-mono">NO IMAGE</span>
                                                     </div>
                                                 )}
                                             </div>
-
-                                            {/* Footer */}
                                             <div className="mt-auto pt-5">
                                                 <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
                                                     <span className="text-[10px] uppercase text-slate-500 font-mono tracking-widest">Target Date</span>
@@ -393,8 +369,6 @@ useEffect(() => {
             </div>
         </div>
       </div>
-
-      {/* Modals & Drawers */}
       {editOpen && (
         <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md" onClick={() => seteditOpen(false)} />
       )}

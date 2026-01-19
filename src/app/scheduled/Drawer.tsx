@@ -115,7 +115,7 @@ export default function Drawer({open,onSaved,initialContent,initialChannel,post,
                 <div className=' px-6 py-6'>
                     <button onClick={()=>{setSave(true);
 
-                      handleSave()}} className='bg-gradient-to-r from-blue-400 to-purple-400 w-full p-3 text-xl rounded-xl flex justify-center cursor-pointer font-semibold items-center gap-2 scale-100 hover:scale-105 transition ease-in-out duration-500' >
+                      handleSave()}} className='bg-gradient-to-r from-blue-400 to-purple-400 w-full p-3 text-xl rounded-2xl flex justify-center cursor-pointer font-semibold items-center gap-2 scale-100 hover:scale-105 transition ease-in-out duration-500' >
                         <Save className="w-6 h-6 mr-2" />
                         Save Changes
                    </button>
