@@ -222,14 +222,15 @@ router.push("/postGenerated");
           <span>Post description</span>
         </div>
 
-        <div className={`mt-4 rounded-2xl transition-all duration-300 backdrop-blur-md ${isFocused1 ? "ring-2 ring-cyan-500 shadow-[0_0_40px_rgba(0,200,255,0.3)]" : "border border-white/10 bg-white/5"}`}>
+        <div className={`mt-4 rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-md ${isFocused1 ? "ring-2 ring-cyan-500 shadow-[0_0_40px_rgba(0,200,255,0.3)]" : "border border-white/10 bg-white/5"}`}>
           <textarea
             value={desc}
             onChange={(e) => setDesc(e.target.value.slice(0, 2000))}
             placeholder={PLACEHOLDER_EXAMPLES[placeholder]}
             onFocus={handleFocus1}
             onBlur={handleBlur1}
-            className="text-lg w-full h-64 bg-card/50 text-foreground placeholder-muted-foreground p-4 rounded-lg resize-none focus:outline-none"
+            className="text-lg w-full h-64 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
+
           />
         </div>
 
@@ -258,7 +259,7 @@ router.push("/postGenerated");
               <Volume2 />
               <span>Tone</span>
             </div>
-            <div className="flex gap-3 mt-2">
+            <div className="flex flex-wrap gap-3 mt-2">
               {tones.map((tone) => (
                 <button
                   key={tone}
@@ -291,25 +292,25 @@ router.push("/postGenerated");
               <Image className="text-cyan-500" />
               <span>Image description</span>
             </div>
-            <div className={`relative rounded-2xl transition-all duration-300 ${isFocused2 ? "ring-2 ring-cyan-500 shadow-2xl shadow-indigo-600/50" : "border border-white/10 bg-white/5"}`}>
+            <div className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${isFocused2 ? "ring-2 ring-cyan-500 shadow-2xl shadow-indigo-600/50" : "border border-white/10 bg-white/5"}`}>
               <textarea
                 value={prompts}
                 onChange={(e) => setPrompts(e.target.value.slice(0, 2000))}
                 placeholder={IMAGE_PLACEHOLDER_EXAMPLES[placeholderImage]}
                 onFocus={handleFocus2}
                 onBlur={handleBlur2}
-                className="text-lg w-full h-40 bg-card/50 text-foreground placeholder-muted-foreground p-4 rounded-lg resize-none focus:outline-none"
+                className="text-lg w-full h-40 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
               />
             </div>
           </div>
         )}
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 mb-16">
-          <button className="mt-6 text-white bg-gradient-to-br from-[#00d4ff] to-[#a855f7] p-4 text-xl font-medium rounded-xl cursor-pointer flex gap-2 items-center justify-center hover:opacity-90 transition-opacity" onClick={handlePostGeneration}>
+          <button className="mt-6 text-white bg-gradient-to-br from-[#00d4ff] to-[#a855f7] p-4 text-xl font-medium rounded-2xl cursor-pointer flex gap-2 items-center justify-center hover:opacity-90 transition-opacity" onClick={handlePostGeneration}>
             <Sparkles />
             <span>Generate Post</span>
           </button>
-          <button className="mt-6 text-white bg-gradient-to-br from-[#00d4ff] to-[#a855f7] p-4 text-xl font-medium rounded-xl cursor-pointer flex gap-2 items-center justify-center hover:opacity-90 transition-opacity" onClick={handleImageGeneration}>
+          <button className="mt-6 text-white bg-gradient-to-br from-[#00d4ff] to-[#a855f7] p-4 text-xl font-medium rounded-2xl cursor-pointer flex gap-2 items-center justify-center hover:opacity-90 transition-opacity" onClick={handleImageGeneration}>
             <Sparkles />
             <span>Generate Post With Image</span>
           </button>

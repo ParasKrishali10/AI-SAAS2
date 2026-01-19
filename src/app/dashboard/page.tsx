@@ -147,8 +147,9 @@ export default function DashboardPage() {
 
         <nav className="flex-1 px-4 py-8 space-y-2 font-medium">
           <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-xl opacity-100 blur-md transition-opacity"></div>
-            <button className="relative w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-transparent border border-cyan-500/20 text-cyan-400">
+           <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-xl opacity-100 blur-md transition-opacity pointer-events-none"></div>
+
+            <button className="relative w-full cursor-pointer flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-transparent border border-cyan-500/20 text-cyan-400">
               <LayoutDashboard className="h-5 w-5" />
               <span>Dashboard</span>
               <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
@@ -159,7 +160,7 @@ export default function DashboardPage() {
             { icon: CalendarClock, label: "Scheduled" },
             { icon: BarChart3, label: "Analytics" },
           ].map((item, idx) => (
-            <button onClick={handleRedirection(item.label)} key={idx} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group">
+            <button onClick={handleRedirection(item.label)} key={idx} className="w-full flex items-center gap-3 cursor-pointer px-4 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group">
               <item.icon className="h-5 w-5 group-hover:text-cyan-400 transition-colors" />
               <span>{item.label}</span>
             </button>

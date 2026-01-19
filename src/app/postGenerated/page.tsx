@@ -245,34 +245,48 @@ return (
           <div className="flex flex-col gap-8 pb-24">
 
             <section>
-              <div className="text-xl font-bold flex gap-2 items-center mb-4">
-                <Sparkles className="text-cyan-400" />
-                <span>Generated Content</span>
-              </div>
-              <div className="rounded-xl p-6 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-cyan-500/10">
-                {images.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-4 mb-6">
-                    {images.map((img, i) => (
-                      <img key={i} src={img} alt="" className="w-64 h-64 object-cover rounded-xl shadow-lg border border-white/5" />
-                    ))}
-                  </div>
-                )}
-                <textarea
-                  value={contents===""?content:contents}
-                  onChange={(e) => {setContents(e.target.value)}}
-                  className="text-lg w-full h-80 p-5 rounded-lg resize-none bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
-                />
-              </div>
-            </section>
+  <div className="text-xl font-bold flex gap-2 items-center mb-4">
+    <Sparkles className="text-cyan-400" />
+    <span>Generated Content</span>
+  </div>
 
-            <section className="rounded-xl p-8 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-purple-500/10">
+  {/* Outer glass card */}
+  <div className="rounded-2xl p-6 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-cyan-500/10">
+
+    {images.length > 0 && (
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        {images.map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            alt=""
+            className="w-64 h-64 object-cover rounded-xl shadow-lg border border-white/5"
+          />
+        ))}
+      </div>
+    )}
+
+   <div className="rounded-xl overflow-hidden border border-white/10 bg-white/5">
+  <textarea
+    value={contents === "" ? content : contents}
+    onChange={(e) => setContents(e.target.value)}
+    className="text-lg w-full h-80 p-5 resize-none bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all rounded-xl"
+  />
+</div>
+
+  </div>
+</section>
+
+
+            <section className="rounded-2xl overflow-hidden p-8 backdrop-blur-md border border-white/10 bg-white/5 shadow-xl shadow-purple-500/10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-3">
                   <label className="font-bold text-lg">Server</label>
                   <select
                     value={selectedServer}
                     onChange={(e) => {setSelectedServer(e.target.value); notifyChannel();}}
-                    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:ring-2 focus:ring-cyan-500 text-white"
+                    className="w-full p-3 rounded-2xl bg-transparent border border-white/20 focus:ring-2 focus:ring-cyan-500 text-white"
+
                   >
                     <option value="" className="bg-slate-900">Select a Server</option>
                     {servers.map((s) => (
@@ -287,7 +301,7 @@ return (
                     disabled={!selectedServer}
                     value={selectedChannel}
                     onChange={(e) => setSelectedChannel(e.target.value)}
-                    className="w-full p-3 rounded-lg bg-white/5 border border-white/10 focus:ring-2 focus:ring-cyan-500 text-white disabled:opacity-50"
+                    className="w-full p-3 rounded-2xl border border-white/10 focus:ring-2 focus:ring-cyan-500 text-white disabled:opacity-50"
                   >
                     <option value="" className="bg-slate-900">Select a Channel</option>
                     {channels.map((ch) => (
@@ -309,18 +323,18 @@ return (
                   <>
                     <div className="flex flex-col gap-3">
                       <label className="font-bold text-lg">Date</label>
-                      <input type="date" className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-white" onChange={(e) => setSelectedDate(e.target.value)} />
+                      <input type="date" className="w-full p-3 rounded-2xl  border border-white/10 text-white" onChange={(e) => setSelectedDate(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-3">
                       <label className="font-bold text-lg">Time</label>
-                      <input type="time" className="w-full p-3 rounded-lg bg-white/5 border border-white/10 text-white" onChange={(e) => setSelectedTime(e.target.value)} />
+                      <input type="time" className="w-full p-3 rounded-2xl  border border-white/10 text-white" onChange={(e) => setSelectedTime(e.target.value)} />
                     </div>
                   </>
                 )}
               </div>
 
               <div className="flex justify-center mt-10">
-                <button onClick={handleSchedule} className="flex items-center gap-3 bg-gradient-to-r from-cyan-400 to-purple-500 px-12 py-4 rounded-xl font-bold text-xl hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-purple-500/20 hover:cursor-pointer">
+                <button onClick={handleSchedule} className="flex items-center gap-3 bg-gradient-to-r from-cyan-400 to-purple-500 px-12 py-4 rounded-2xl font-bold text-xl hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-purple-500/20 hover:cursor-pointer">
                   <SendHorizontal />
                   <span>Schedule Post</span>
                 </button>

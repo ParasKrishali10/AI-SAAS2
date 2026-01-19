@@ -42,19 +42,19 @@ export default function FinalCTA() {
         </p>
 
         <div className="flex flex-col items-center gap-6">
-            <button
-              onClick={handleConnectDiscord}
-              className="group relative px-10 py-5 cursor-pointer rounded-full bg-slate-900 text-white font-bold text-xl shadow-[0_0_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_0_60px_-10px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-100 animate-gradientMove">
-                 <div className="bg-slate-900 w-full h-full rounded-full"></div>
-              </div>
+           <button
+  onClick={handleConnectDiscord}
+  className="group relative px-10 py-5 cursor-pointer rounded-full bg-slate-900 text-white font-bold text-xl shadow-[0_0_40px_-10px_rgba(168,85,247,0.5)] hover:shadow-[0_0_60px_-10px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:scale-105"
+>
+  <div className="absolute inset-0 rounded-full p-[2px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-100 animate-gradientMove pointer-events-none">
+     <div className="bg-slate-900 w-full h-full rounded-full"></div>
+  </div>
 
-              <div className="relative flex items-center gap-3">
-                 <Sparkles className="w-6 h-6 text-yellow-300 group-hover:animate-spin-slow" />
-                 <span>Get Started for Free</span>
-              </div>
-            </button>
+  <div className="relative flex items-center gap-3">
+     <Sparkles className="w-6 h-6 text-yellow-300 group-hover:animate-spin-slow" />
+     <span>Get Started for Free</span>
+  </div>
+</button>
 
             <p className="text-sm text-slate-500 font-mono">No credit card required • Setup in 2 minutes</p>
         </div>

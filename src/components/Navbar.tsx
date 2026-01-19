@@ -57,7 +57,7 @@ export default function Navbar() {
   const [id,setId]=useState(0);
 return (
 
-    <aside className="w-64 h-screen flex-shrink-0 border-r border-white/5 bg-slate-950/50 backdrop-blur-xl flex flex-col relative z-20">
+<aside className="w-64 h-screen flex-shrink-0 border-r border-white/5 bg-slate-950/50 backdrop-blur-xl flex flex-col relative z-50 pointer-events-auto">
 
       <div className="h-24 flex items-center px-6 border-b border-white/5">
         <div className="flex items-center gap-3">
@@ -74,34 +74,33 @@ return (
 
       <nav className="flex-1 px-4 py-8 space-y-2 font-medium">
 
-        <div className="group relative">
+  <div className="group relative">
+    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-xl opacity-100 blur-md transition-opacity pointer-events-none"></div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-transparent rounded-xl opacity-100 blur-md transition-opacity"></div>
+    <button className="relative w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-transparent border border-cyan-500/20 text-cyan-400 cursor-pointer">
+      <LayoutDashboard className="h-5 w-5" />
+      <span>Dashboard</span>
+      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+    </button>
+  </div>
 
-          <button  className="relative w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-transparent border border-cyan-500/20 text-cyan-400">
-            <LayoutDashboard className="h-5 w-5" />
-            <span>Dashboard</span>
+  {[
+  { icon: Plus, label: "Create Post" },
+  { icon: CalendarClock, label: "Scheduled" },
+  { icon: BarChart3, label: "Analytics" },
+].map((item, idx) => (
+  <button
+    key={idx}
+    onClick={setRedirection(item.label)}
+    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group cursor-pointer"
+  >
+    <item.icon className="h-5 w-5 group-hover:text-cyan-400 transition-colors" />
+    <span>{item.label}</span>
+  </button>
+))}
 
-            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-          </button>
-        </div>
+</nav>
 
-        {[
-          { icon: Plus, label: "Create Post" },
-          { icon: CalendarClock, label: "Scheduled" },
-          { icon: BarChart3, label: "Analytics" },
-        ].map((item, idx) => (
-          <button
-            key={idx}
-            onClick={setRedirection(item.label)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-300 group"
-          >
-
-            <item.icon className="h-5 w-5 group-hover:text-cyan-400 transition-colors" />
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </nav>
 
       <div className="p-4 border-t border-white/5">
          <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 border border-white/5 hover:border-white/10 transition-colors cursor-pointer">

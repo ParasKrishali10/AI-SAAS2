@@ -125,11 +125,15 @@ export default function Topbar() {
             )}
           </div>
 
-          <button className="group relative flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/50 hover:scale-[1.02] transition-all duration-300 overflow-hidden" onClick={() => router.push("/postCreator")}>
-            <div className="absolute inset-0 bg-white/20 skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-transform duration-700"></div>
-            <Plus className="h-5 w-5" />
-            <span>New Post</span>
-          </button>
+          <button
+  onClick={() => router.push("/postCreator")}
+  className="group relative flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/50 hover:scale-[1.02] transition-all duration-300 overflow-hidden cursor-pointer"
+>
+  <div className="absolute inset-0 rounded-2xl bg-white/20 skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-transform duration-700 pointer-events-none"></div>
+  <Plus className="h-5 w-5" />
+  <span>New Post</span>
+</button>
+
         </div>
       </div>
     </div>
