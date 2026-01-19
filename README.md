@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Discord AI Content Generation & Scheduling SaaS
 
-## Getting Started
+A **production-ready SaaS platform** that helps creators and communities **generate AI-powered Discord content**, **schedule posts**, **track real-time emoji reactions**, and receive **instant notifications** — all from a single dashboard.
 
-First, run the development server:
+Built with **modern full-stack architecture**, real-time systems, and scalable design principles.
 
+---
+
+## ✨ Features
+
+### 🧠 AI Content Generation
+- Generate Discord-ready content using **OpenAI**
+- Smart prompts for engaging community posts
+- Optimized output for Discord formatting
+
+---
+
+### 🎨 AI Image Generation
+- Generate images using **Hugging Face**
+- Perfect for announcements, promotions, and engagement posts
+- Seamlessly attach generated images to Discord posts
+
+---
+
+### ⏰ Post Scheduling System
+- Schedule posts for **future dates & times**
+- Reliable execution using **cron jobs**
+- Posts are published even when users are offline
+
+---
+
+### 📊 Post Management Dashboard
+- View **all scheduled & published posts**
+- Track post status in one place
+- Simple, clean, and easy-to-use UI
+
+---
+
+### ⚡ Real-Time Emoji Reaction Tracking
+- Live tracking of emoji reactions on Discord posts
+- Updates without page reloads
+- Smooth UI animations for reaction counts
+
+---
+
+### 🔔 Real-Time Notifications
+- Instant notifications when:
+  - A scheduled post is published
+  - Someone reacts to your post with an emoji
+- Notifications work **globally across all pages**
+- Event-driven (no polling, no refresh hacks)
+
+---
+
+## 🏗️ System Architecture
+
+This project follows a **distributed SaaS architecture**:
+
+Frontend (Next.js)
+↓
+API Layer (Serverless)
+↓
+Database (Supabase)
+↓
+Cron Jobs
+↓
+Discord Bot (Render)
+↓
+Real-Time Events (Pusher)
+
+
+### Key Design Principles
+- Event-driven communication
+- Clear separation of concerns
+- Scalable and production-safe design
+- Real-time UX without WebSocket servers on Vercel
+
+---
+
+## 🤖 Discord Bot Responsibilities
+
+The Discord bot is a **core system component**, responsible for:
+
+- Publishing scheduled posts
+- Listening to emoji reactions
+- Emitting reaction events in real time
+
+### Deployment
+- Hosted on **Render**
+- Uses **uptime strategy** to stay awake
+- Designed for long-running background tasks
+
+---
+
+## ⚙️ Tech Stack
+
+### Frontend
+- **Next.js (App Router)**
+- **TypeScript**
+- **Framer Motion**
+- **Zustand**
+
+### Backend & Infrastructure
+- **Supabase** (Database & persistence)
+- **Prisma ORM**
+- **Pusher** (Real-time notifications)
+- **Cron Jobs** (Scheduling)
+
+### AI & Automation
+- **OpenAI** – content generation
+- **Hugging Face** – image generation
+- **Discord.js** – bot integration
+
+---
+
+## 📦 Installation
+
+### Install dependencies
 ```bash
+npm install
+
+### Run Project
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
