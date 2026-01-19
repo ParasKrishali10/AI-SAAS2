@@ -165,9 +165,7 @@ export default function Hero() {
 </button>
 
 
-                {/* <button className="px-8 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-semibold text-lg transition-all backdrop-blur-sm">
-                    View Demo
-                </button> */}
+               
             </div>
         </div>
 
