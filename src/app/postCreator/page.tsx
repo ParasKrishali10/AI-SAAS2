@@ -236,7 +236,7 @@ router.push("/postGenerated");
             placeholder={PLACEHOLDER_EXAMPLES[placeholder]}
             onFocus={handleFocus1}
             onBlur={handleBlur1}
-            className="text-lg w-full h-64 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
+            className="text-lg w-full text-white h-64 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
 
           />
         </div>
@@ -306,7 +306,7 @@ router.push("/postGenerated");
                 placeholder={IMAGE_PLACEHOLDER_EXAMPLES[placeholderImage]}
                 onFocus={handleFocus2}
                 onBlur={handleBlur2}
-                className="text-lg w-full h-40 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
+                className="text-lg w-full text-white h-40 bg-transparent text-foreground placeholder-muted-foreground p-4 resize-none focus:outline-none"
               />
             </div>
           </div>
