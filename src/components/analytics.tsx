@@ -37,8 +37,9 @@ export default function Analytics() {
             <div className="grid grid-cols-1 gap-4">
               {[
                 { text: "Live Engagement Metrics", icon: Zap, color: "text-yellow-400" },
-                { text: "Member Reaction Tracking", icon: TrendingUp, color: "text-emerald-400" },
-                { text: "Reaction Heatmaps", icon: PieChart, color: "text-purple-400" }
+                { text: "Member Growth Tracking", icon: TrendingUp, color: "text-emerald-400" },
+                { text: "Reaction Heatmaps", icon: PieChart, color: "text-purple-400" },
+                { text: "Exportable Reports", icon: BarChart3, color: "text-cyan-400" }
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5 group">
                   <div className={`p-2 rounded-lg bg-slate-900 border border-white/10 ${item.color} group-hover:scale-110 transition-transform shadow-lg`}>
@@ -50,7 +51,7 @@ export default function Analytics() {
             </div>
           </div>
 
-          <div className={`relative ${isInView ? "animate-float" : ""}`}>
+          <div className={`relative ${isInView ? "float-tilt-in": ""}`}>
 
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-cyan-500/20 rounded-3xl blur-3xl transform rotate-3 scale-95" />
 
