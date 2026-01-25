@@ -12,7 +12,6 @@ export default function FinalCTA() {
     discordAuthUrl.searchParams.append("permissions", "68608");
     window.location.href = discordAuthUrl.toString();
   };
-
   return (
     <section className="relative py-32 px-4 overflow-hidden bg-slate-950 flex flex-col items-center justify-center min-h-[600px]">
 
