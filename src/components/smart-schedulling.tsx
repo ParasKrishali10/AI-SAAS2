@@ -17,7 +17,7 @@ export default function SmartScheduling() {
       <div className="max-w-7xl mx-auto">
         <div className={`grid lg:grid-cols-2 gap-16 items-center ${isInView ? "animate-slide-in-right" : "opacity-0"}`}>
 
-          <div className={`relative order-2 lg:order-1 ${isInView ? "animate-float" : ""}`}>
+          <div className={`relative order-2 lg:order-1 ${isInView ? "float-tilt-out" : ""}`}>
 
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl blur-3xl transform -rotate-3 scale-95" />
               <Image src="/Gen.jpeg" alt="AI Interface" width={0} height={0} sizes="100vw" className="w-full h-autorelative z-10 rounded-xl border border-white/10 shadow-2xl" />
