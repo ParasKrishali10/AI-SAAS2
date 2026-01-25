@@ -174,7 +174,7 @@ export default function Hero() {
           >
             <button
               onClick={handleConnectDiscord}
-              className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] group"
+              className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] group cursor-pointer"
             >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite]
                 bg-[conic-gradient(from_90deg_at_50%_50%,#22d3ee_0%,#a855f7_50%,#22d3ee_100%)]" />
