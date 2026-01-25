@@ -46,7 +46,7 @@ export default function DashboardPreview() {
           </p>
         </div>
 
-        <div className={`relative rounded-3xl ${isInView ? "animate-fade-in-up" : "opacity-0"}`}>
+        <div className={`relative rounded-3xl ${isInView ? "swing-in-bottom-fwd" : "opacity-0"}`}>
 
           <div className="absolute -inset-[1px] bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl opacity-30 blur-sm" />
             <Image src="/dashboard.png" alt="AI Interface" width={0} height={0} sizes="100vw" className="w-full h-autorelative z-10 rounded-xl border border-white/10 shadow-2xl" />
