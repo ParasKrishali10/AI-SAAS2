@@ -54,7 +54,7 @@ export default function ContentGeneration() {
             </div>
           </div>
 
-          <div className={`relative ${isInView ? "animate-float" : ""}`}>
+          <div className={`relative ${isInView ? "float-tilt-in" : ""}`}>
 
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-3xl transform rotate-6 scale-90" />
               <Image src="/Creator.jpeg" alt="AI Interface" width={0} height={0} sizes="100vw" className="w-full h-autorelative z-10 rounded-xl border border-white/10 shadow-2xl" />
