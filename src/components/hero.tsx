@@ -97,7 +97,7 @@ export default function Hero() {
   if (!mounted) return null
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden bg-slate-950">
+    <section className="relative min-h-screen flex items-center justify-center px-4  overflow-hidden bg-slate-950">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[#020410]"></div>
         <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-900/10 blur-[120px]"></div>
@@ -105,7 +105,7 @@ export default function Hero() {
         <BackgroundBeams />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5"></div>
       </div>
-      <div className="relative z-10 flex flex-col xl:flex-row items-center justify-center min-h-screen p-6 gap-8 xl:gap-12 max-w-[1600px] mx-auto">
+      <div className="relative z-10 flex flex-col xl:flex-row items-center justify-center p-6 gap-8 xl:gap-12 max-w-[1600px] mx-auto">
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -174,12 +174,12 @@ export default function Hero() {
           >
             <button
               onClick={handleConnectDiscord}
-              className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] group cursor-pointer"
+              className="relative inline-flex h-14 overflow-hidden rounded-full p-[2px] group"
             >
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite]
                 bg-[conic-gradient(from_90deg_at_50%_50%,#22d3ee_0%,#a855f7_50%,#22d3ee_100%)]" />
-              <span className="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-sm font-medium text-white gap-2 backdrop-blur-3xl">
-                <Diamond className="h-4 w-4 text-cyan-400 group-hover:animate-pulse" />
+              <span className="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-md font-medium text-white gap-2 backdrop-blur-3xl cursor-pointer">
+                <Diamond className="h-6 w-6 text-cyan-400 group-hover:animate-pulse" />
                 Connect Discord
               </span>
             </button>
@@ -229,7 +229,7 @@ export default function Hero() {
     </svg>
   </div>
 </div>
-<div className="grid grid-cols-2 gap-4 mt-2">
+<div className="grid grid-cols-2 gap-2 mt-2">
   <StatCard title="Engage" value="193" icon={Activity} color="purple" />
   <StatCard title="Reach" value="4" subtext={<span className="text-xs text-cyan-400 ml-1">↑</span>} icon={TrendingUp} color="cyan" />
 </div>
