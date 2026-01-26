@@ -128,7 +128,7 @@ The Discord bot is a **core system component**, responsible for:
 
 ### Install dependencies
 ```bash
-    npm install
+npm install
 ```
 Run the project locally
 
