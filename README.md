@@ -1,5 +1,7 @@
 # 🚀 Discord AI Content Generation & Scheduling SaaS
 
+🔗 **Live Demo:** https://ai-saas-2-red.vercel.app/  
+
 A **production-ready SaaS platform** that helps creators and communities **generate AI-powered Discord content**, **schedule posts**, **track real-time emoji reactions**, and receive **instant notifications** — all from a single dashboard.
 
 Built with **modern full-stack architecture**, real-time systems, and scalable design principles.
@@ -17,7 +19,7 @@ Built with **modern full-stack architecture**, real-time systems, and scalable d
 
 ### 🎨 AI Image Generation
 - Generate images using **Hugging Face**
-- Perfect for announcements, promotions, and engagement posts
+- Ideal for announcements, promotions, and engagement posts
 - Seamlessly attach generated images to Discord posts
 
 ---
@@ -31,8 +33,8 @@ Built with **modern full-stack architecture**, real-time systems, and scalable d
 
 ### 📊 Post Management Dashboard
 - View **all scheduled & published posts**
-- Track post status in one place
-- Simple, clean, and easy-to-use UI
+- Track post status from a single page
+- Clean, intuitive, and easy-to-use UI
 
 ---
 
@@ -48,24 +50,24 @@ Built with **modern full-stack architecture**, real-time systems, and scalable d
   - A scheduled post is published
   - Someone reacts to your post with an emoji
 - Notifications work **globally across all pages**
-- Event-driven (no polling, no refresh hacks)
+- Event-driven architecture (no polling, no refresh hacks)
 
 ---
 
 ## 🏗️ System Architecture
 
-This project follows a **distributed SaaS architecture**:
+This project follows a **distributed SaaS architecture** designed for scalability and reliability:
 
-Frontend (Next.js)
-↓
-API Layer (Serverless)
-↓
-Database (Supabase)
-↓
-Cron Jobs
-↓
-Discord Bot (Render)
-↓
+Frontend (Next.js)  
+↓  
+API Layer (Serverless)  
+↓  
+Database (Supabase)  
+↓  
+Cron Jobs  
+↓  
+Discord Bot (Render)  
+↓  
 Real-Time Events (Pusher)
 
 
@@ -81,14 +83,23 @@ Real-Time Events (Pusher)
 
 The Discord bot is a **core system component**, responsible for:
 
-- Publishing scheduled posts
-- Listening to emoji reactions
+- Publishing scheduled posts to Discord
+- Listening to emoji reactions on posts
 - Emitting reaction events in real time
 
-### Deployment
+### Bot Deployment
 - Hosted on **Render**
-- Uses **uptime strategy** to stay awake
-- Designed for long-running background tasks
+- Designed for **long-running background tasks**
+- Uses an uptime strategy to prevent cold starts
+
+---
+
+## ☁️ Deployment & Reliability
+
+- **Frontend** deployed on **Vercel** for fast, serverless rendering.
+- **Discord Bot** deployed on **Render** to support persistent background execution.
+- Implemented an **uptime strategy** using external health checks to keep the bot active.
+- System designed to handle **serverless limitations** by separating UI and background workers.
 
 ---
 
@@ -117,7 +128,8 @@ The Discord bot is a **core system component**, responsible for:
 
 ### Install dependencies
 ```bash
-npm install
+    npm install
+```
+Run the project locally
 
-### Run Project
-npm run dev
+    npm run dev
