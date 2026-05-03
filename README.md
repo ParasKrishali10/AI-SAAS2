@@ -155,13 +155,11 @@ Run the project locally
 
 ----------
 
- ⭐ Summary
+## ⭐ Summary
+AI PR Analyzer helps developers:
 
-Discord AI Content SaaS helps creators and communities:
-
-✔ Generate high-quality Discord posts using AI
-✔ Schedule and automate content publishing
-✔ Create images for announcements and engagement
-✔ Track emoji reactions in real time
-✔ Receive instant notifications for activity
-✔ Manage all content from a single dashboard
+✔ Focus on high-risk PRs  
+✔ Understand risks clearly  
+✔ Stay in control of decisions
+AI PR Analyzer helps developers:stand risks clearly  
+✔ Stay in control of decisions
