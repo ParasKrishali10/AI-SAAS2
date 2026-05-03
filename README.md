@@ -156,10 +156,10 @@ Run the project locally
 ----------
 
 ## ⭐ Summary
-AI PR Analyzer helps developers:
+An AI-powered SaaS platform that enables creators to:
 
-✔ Focus on high-risk PRs  
-✔ Understand risks clearly  
-✔ Stay in control of decisions
-AI PR Analyzer helps developers:stand risks clearly  
-✔ Stay in control of decisions
+✔ Generate and enhance Discord content with AI 
+✔ Schedule posts and automate publishing
+✔ Monitor engagement with real-time reactions
+✔ Receive instant notifications across the app
+✔ Manage everything from one unified dashboard
