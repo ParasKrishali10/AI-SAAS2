@@ -2,6 +2,24 @@
 
 🔗 **Live Demo:** https://ai-saas-2-red.vercel.app/  
 
+![Next.js](https://img.shields.io/badge/Next.js-AppRouter-black?logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-Language-blue?logo=typescript&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer%20Motion-Animation-black?logo=framer&logoColor=blue)
+![Zustand](https://img.shields.io/badge/Zustand-State%20Management-ff69b4)
+
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green?logo=node.js&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white)
+![Pusher](https://img.shields.io/badge/Pusher-Realtime-300D4F?logo=pusher&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-Queue-red?logo=redis&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
+![Cron](https://img.shields.io/badge/Cron-Jobs-orange)
+
+![OpenAI](https://img.shields.io/badge/OpenAI-AI-412991?logo=openai&logoColor=white)
+![Hugging Face](https://img.shields.io/badge/Hugging%20Face-ML-yellow?logo=huggingface&logoColor=black)
+![Discord.js](https://img.shields.io/badge/Discord.js-Bot-5865F2?logo=discord&logoColor=white)
+
 A **production-ready SaaS platform** that helps creators and communities **generate AI-powered Discord content**, **schedule posts**, **track real-time emoji reactions**, and receive **instant notifications** — all from a single dashboard.
 
 Built with **modern full-stack architecture**, real-time systems, and scalable design principles.
