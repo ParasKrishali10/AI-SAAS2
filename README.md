@@ -156,10 +156,11 @@ Run the project locally
 ----------
 
 ## ⭐ Summary
+
 An AI-powered SaaS platform that enables creators to:
 
-✔ Generate and enhance Discord content with AI 
-✔ Schedule posts and automate publishing
-✔ Monitor engagement with real-time reactions
-✔ Receive instant notifications across the app
-✔ Manage everything from one unified dashboard
+✔ Generate and enhance Discord content with AI  
+✔ Schedule posts and automate publishing  
+✔ Monitor engagement with real-time reactions  
+✔ Receive instant notifications across the app  
+✔ Manage everything from one unified dashboard  
