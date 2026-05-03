@@ -152,3 +152,16 @@ npm install
 Run the project locally
 
     npm run dev
+
+----------
+
+ ⭐ Summary
+
+Discord AI Content SaaS helps creators and communities:
+
+✔ Generate high-quality Discord posts using AI
+✔ Schedule and automate content publishing
+✔ Create images for announcements and engagement
+✔ Track emoji reactions in real time
+✔ Receive instant notifications for activity
+✔ Manage all content from a single dashboard
