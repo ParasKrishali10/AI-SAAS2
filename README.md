@@ -1,6 +1,5 @@
 # 🚀 Discord AI Content Generation & Scheduling SaaS
-
-🔗 **Live Demo:** https://ai-saas-2-red.vercel.app/  
+ 
 
 ![Next.js](https://img.shields.io/badge/Next.js-AppRouter-black?logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Language-blue?logo=typescript&logoColor=white)
@@ -19,6 +18,8 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-AI-412991?logo=openai&logoColor=white)
 ![Hugging Face](https://img.shields.io/badge/Hugging%20Face-ML-yellow?logo=huggingface&logoColor=black)
 ![Discord.js](https://img.shields.io/badge/Discord.js-Bot-5865F2?logo=discord&logoColor=white)
+
+🔗 **Live Demo:** https://ai-saas-2-red.vercel.app/ 
 
 A **production-ready SaaS platform** that helps creators and communities **generate AI-powered Discord content**, **schedule posts**, **track real-time emoji reactions**, and receive **instant notifications** — all from a single dashboard.
 
